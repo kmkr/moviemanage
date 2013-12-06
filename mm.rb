@@ -1,47 +1,48 @@
-require 'find'
-require 'pathname'
+#!/usr/bin/ruby
+# encoding: utf-8
+require 'optparse'
 
-vlc_bin='C:\Program Files (x86)\VideoLAN\VLC\vlc.exe'
+require_relative 'moviename/processor'
+require_relative 'foldercleaner/folder_cleaner'
+require_relative 'mover/movie_mover'
+require_relative 'rename_runner'
+require_relative 'settings'
 
-file_paths = []
-Find.find('.') do |path|
-  file_paths << path if path =~ /.*\.(mkv|mp4|avi|mpeg|iso)$/
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: mm.rb [options]"
+
+  opts.on("-n", "--name", "Set movie name") do |v|
+    options[:movie] = v
+  end
+  opts.on("-m", "--move", "Move files at the end") do |v|
+    options[:move] = v
+  end
+  opts.on("-a", "--actresses", "Set actresses names") do |v|
+    options[:actresses] = v
+  end
+  opts.on("-c", "--categories", "Add categories") do |v|
+    options[:categories] = v
+  end
+  opts.on("--all", "Do everything") do |v|
+    options[:movie] = true
+    options[:categories] = true
+    options[:actresses] = true
+    options[:move] = true
+  end
+end.parse!
+
+Settings.load!("config.yml")
+
+if options[:movie]
+  MovieNameProcessor.new.process  
 end
 
-def strip_ext(inp)
-	inp.gsub(File.extname(inp), "")
+if options[:actresses] or options[:categories]
+  RenameRunner.new.run options[:actresses], options[:categories]
 end
 
-def strip_disc(inp)
-	inp.gsub(/_disc\d+/, "")
-end
-
-def prefix_filename(path, prefix)
-	fn = Pathname.new(path).basename.to_s
-	path.gsub(fn, prefix + fn)
-end
-
-file_paths.each do |file_path|
-	txtFileName = prefix_filename(strip_disc(strip_ext(file_path)), ".") + ".txt"
-	p "Ttxfilename er #{txtFileName}"
-
-	if File.exists? txtFileName
-		p File.read(txtFileName)
-	end
-
-	pid = Process.fork {
-		`"#{vlc_bin}" "#{file_path}"`
-	}
-
-	p "Actress? Sep by underscore"
-	names = gets
-	Process.kill pid
-	p "Skrev inn #{names}"
-
-	file_path.gsub!(/_disc\d+/, "")
-	extension = File.extname(file_path)
-	file_path.gsub(/#{extension}/, "_#{names}#{extension}")
-
-	p "Rename til '#{file_path}'"
-
+if options[:move]
+  MovieMover.new.move  
+  FolderCleaner.new.consider_clean
 end
