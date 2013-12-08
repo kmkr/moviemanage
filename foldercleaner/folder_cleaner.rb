@@ -14,11 +14,11 @@ class FolderCleaner
 	end
 
 	private
-	def consider_del(force = false)
+	def consider_del(wipe_files = false)
 		inp = gets.chomp
 		folder = Dir.pwd
 		if inp == "y" or inp == ""
-			if force
+			if wipe_files
 				Dir.glob("#{folder}/*").each do |file|
 					File.delete file
 					p "Deleted #{file}"
