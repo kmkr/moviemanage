@@ -39,7 +39,8 @@ if options[:movie]
 end
 
 if options[:actresses] or options[:categories]
-  RenameRunner.new.run options[:actresses], options[:categories]
+  log = !options[:move]
+  RenameRunner.new.run options[:actresses], options[:categories], log
 end
 
 if options[:move]

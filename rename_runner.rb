@@ -10,7 +10,7 @@ class RenameRunner
   @@actresses_processor = ActressesProcessor.new
   @@categories_processor = CategoriesProcessor.new
 
-  def run (actresses = true, categories = true)
+  def run (actresses = true, categories = true, log = false)
     FileFinder.new.find.each do |file_path|
 
       Thread.new do
@@ -54,7 +54,9 @@ class RenameRunner
         done = inp.chomp == "" || inp.chomp == "y"
         if done
           File.rename file_path, processed_name
-          File.open('.operations.txt', 'a') { |f| f.write("mv \"#{file_path}\" \"#{processed_name}\"") }
+          if log
+            File.open('.operations.txt', 'a') { |f| f.write("mv \"#{file_path}\" \"#{processed_name}\"\n") }
+          end
         end
       end
     end
