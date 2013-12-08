@@ -10,7 +10,7 @@ class MovieMover
 		end
 
 		p "Where do you want to move #{files.inspect} ?"
-		root = list_and_choose Settings.mover.destinations
+		root = list_and_choose Settings.mover["destinations"]
 		folder = list_and_choose Dir["#{root}/*"]
 
 		files.each do |file|
