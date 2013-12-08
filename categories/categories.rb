@@ -8,7 +8,6 @@ class Categories
 
 		Settings.categories.each do |category|
 			letter = category.match(/\[(\w)\]/)[1]
-			p "Sjekker #{category} ved a se om #{letter} er i #{inp}"
 			str += "[#{category.gsub(/[\[\]]/, "")}]" if inp.include? letter
 		end
 
