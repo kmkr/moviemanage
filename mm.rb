@@ -35,7 +35,7 @@ end.parse!
 Settings.load!("config.yml")
 
 if options[:movie]
-  MovieNameProcessor.new.process  
+  MovieNameProcessor.new.process File.basename(Dir.getwd) 
 end
 
 if options[:actresses] or options[:categories]
