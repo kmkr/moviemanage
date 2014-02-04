@@ -5,8 +5,8 @@ class FileNameCleaner
 		inp.gsub(File.extname(inp), "")
 	end
 
-	def strip_disc(inp)
-		inp.gsub(/_disc\d+/, "")
+	def strip_metadata(inp)
+		inp.gsub(/__*./, "")
 	end
 
 	def prefix_filename(path, prefix)
