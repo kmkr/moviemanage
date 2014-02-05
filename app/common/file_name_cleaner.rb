@@ -6,12 +6,7 @@ class FileNameCleaner
 	end
 
 	def strip_metadata(inp)
-		inp.gsub(/__*./, "")
-	end
-
-	def prefix_filename(path, prefix)
-		fn = file_only(path)
-		path.gsub(fn, prefix + fn)
+		inp.gsub(/__.*/, "")
 	end
 
 	def file_only (path)
@@ -19,10 +14,16 @@ class FileNameCleaner
 	end
 
 	def find_txt_name(inp)
-		prefix_filename(strip_disc(strip_ext(inp)), ".") + ".txt"
+		prefix_filename(strip_metadata(strip_ext(inp)), ".") + ".txt"
 	end
 
 	def find_tease_name(inp)
-		strip_ext(file_only(strip_disc(inp)))
+		strip_ext(file_only(strip_metadata(inp)))
+	end
+
+	private
+	def prefix_filename(path, prefix)
+		fn = file_only(path)
+		path.gsub(fn, prefix + fn)
 	end
 end

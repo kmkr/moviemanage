@@ -1,5 +1,3 @@
-require_relative '../common/file_finder'
-
 class FolderCleaner
 	def consider_clean
 		files = Dir.glob("**")
