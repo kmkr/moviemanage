@@ -15,14 +15,11 @@ class TeaseClipProcessor
 	def process (file)
 		tease_complete = false
 		until tease_complete
-			start_at = get_time("start at")
+			start_at, ends_at = get_time()
 			if start_at == false
 				return
 			end	
-			ends_at = get_time("ends at")
-			if ends_at == false
-				return
-			end	
+
 			length_in = ends_at - start_at
 			tease_name = generate_tease_name(file)
 			
@@ -38,7 +35,8 @@ class TeaseClipProcessor
 			done = false
 			until done
 				puts "Create #{tease_name}? [y]/n"
-				if gets.chomp == "y" or gets.chomp == ""
+				inp = gets.chomp
+				unless inp == "n"
 					done = true
 					@movie_processor.tease(file, keyframe, length_in, tease_name)
 				end
@@ -97,23 +95,42 @@ class TeaseClipProcessor
 		@name_indexifier.indexify_if_exists(newname)
 	end
 
-	def get_time(type)
+	def get_time
 		result = nil
 		while result.nil?
-			puts "Tease #{type} hh:mm:ss (type end to finish)"
+			puts "Tease start at and ends at in format hh:mm:ss (blank to finish)"
 			inp = gets.chomp
-			if inp == "end"
+			times = inp.split(/\s/)
+			start_at = times[0]
+			end_at = times[1]
+			if inp.empty?
 				result = false
-			else
-				puts "sjekker '#{inp}'"
-				match = inp.match(/\A((\d{2}):)?((\d{2}):)?(\d{2})\Z/)
-				if match
-					result = (match[5] or 0).to_i + (match[4] or 0).to_i * 60) + (match[2].to_i * 3600)
+			elsif start_at and end_at
+				start_at_seconds = seconds_from_str (start_at)
+				end_at_seconds = seconds_from_str (end_at)
+				if start_at_seconds and end_at_seconds
+					result = [
+						start_at_seconds,
+						end_at_seconds
+					]
 				end
 			end
 		end
 
 		result
+	end
+
+	def seconds_from_str (str)
+		match = str.split(/\D/)
+		if match.size > 0
+			seconds = match.pop
+			minutes = match.pop
+			hours = match.pop
+
+			return seconds.to_i + (minutes or 0).to_i * 60 + (hours or 0).to_i * 3600
+		end
+
+		return nil
 	end
 
 end

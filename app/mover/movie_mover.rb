@@ -22,8 +22,8 @@ class MovieMover
 		destination = list_and_choose Dir["#{Settings.mover["tease_location"]}/*"]
 
 		tease_files.each do |file|
+			p "Moving #{file} to #{destination}/"
 			FileUtils.mv file, "#{destination}/#{File.basename(file)}"
-			p "Moved #{file} to #{destination}/"
 		end
 	end
 
@@ -35,7 +35,7 @@ class MovieMover
 			return
 		end
 
-		p "Where do you want to move #{files.inspect} ?"
+		p "Where do you want to move "
 		files.each_with_index do |file, index|
 			puts "#{index + 1}) #{file}"
 		end
@@ -43,8 +43,8 @@ class MovieMover
 		folder = list_and_choose Dir["#{root}/*"]
 
 		files.each do |file|
+			p "Moving #{file} to #{folder}/"
 			FileUtils.mv file, "#{folder}/#{file}"
-			p "Moved #{file} to #{folder}/"
 		end
 	end
 

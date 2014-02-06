@@ -42,9 +42,10 @@ class RenameRunner
 
         p "Rename til '#{processed_name}'? Ok? [y]/n"
         inp = gets.chomp
-        done = inp.chomp == "" || inp.chomp == "y"
+        done = true unless inp == "n"
         if done
           File.rename filename, processed_name
+          puts "Renamed"
         end
       end
 
@@ -52,7 +53,7 @@ class RenameRunner
         @@tease_processor.process(processed_name)
       end
 
-      puts "Behold eller slett? Skriv 'del' for å slette"
+      puts "Keep or del? 'del' to delete"
       consider_special_handling(processed_name, gets.chomp)
     end
   end
