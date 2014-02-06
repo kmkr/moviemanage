@@ -27,6 +27,8 @@ class FfmpegProcessor
 		dd, hh = hh.divmod(24)           #=> [3, 3]
 		ms = ms.to_i
 
+		# must start close to the keyframe, starting at the keyframe would be too late and force the player
+		# to wait until next keyframe before showing video
 		if ms > 50
 			ms = ms - 50
 		else
