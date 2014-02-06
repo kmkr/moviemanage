@@ -35,14 +35,6 @@ class TeaseClipProcessor
 
 	private
 
-	def time_to_str (time)
-		puts "sjekker #{time}"
-		mm, ss = time.divmod(60)            #=> [4515, 21]
-		hh, mm = mm.divmod(60)           #=> [75, 15]
-		dd, hh = hh.divmod(24)           #=> [3, 3]
-		"#{hh}:#{mm}:#{ss}"
-	end
-
 	def find_keyframes(file, start_at)
 		short_file_name = "short_#{file}"
 
@@ -58,9 +50,6 @@ class TeaseClipProcessor
 
 	def find_keyframe_alts(file, start_at)
 		keyframes = find_keyframes(file, start_at)
-		# todo: finn kandidater (nærmest start_at)
-		# todo: spør om man vil gå lavere eller høyere
-		# todo: returner det man ønsker
 		puts "Start at #{start_at}"
 		#pkt_pts_time = 29.986333
 		# start_at = 30
@@ -110,4 +99,3 @@ class TeaseClipProcessor
 
 end
 
-TeaseClipProcessor.new.process "soaking.wet__scene1.abby.cross.lola.foxx.mp4"
