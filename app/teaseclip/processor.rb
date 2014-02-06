@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require_relative '../common/file_finder'
+require_relative '../common/name_indexifier'
 require_relative 'ffmpeg_processor'
 require 'fileutils'
 
@@ -8,6 +9,7 @@ class TeaseClipProcessor
 
 	def initialize(movie_processor = FfmpegProcessor.new)
 		@movie_processor = movie_processor
+		@name_indexifier = NameIndexifier.new
 	end
 
 	def process (file)
@@ -73,13 +75,8 @@ class TeaseClipProcessor
 	end
 
 	def generate_tease_name (original)
-		extension = File.extname(original)
-		puts "Creating tease name from #{original}"
 		newname = original.sub(/_\[.*/, extension)
-		while File.exists?(newname)
-			newname = newname.sub(extension, "_tease" + extension)
-		end
-		newname
+		@name_indexifier (newname)
 	end
 
 	def get_time(type)

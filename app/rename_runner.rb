@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require_relative 'common/file_name_cleaner'
+require_relative 'common/name_indexifier'
 require_relative 'actresses/processor'
 require_relative 'categories/processor'
 require_relative 'teaseclip/processor'
@@ -10,6 +11,7 @@ class RenameRunner
   @@actresses_processor = ActressesProcessor.new
   @@categories_processor = CategoriesProcessor.new
   @@tease_processor = TeaseClipProcessor.new
+  @@name_indexifier = NameIndexifier.new
   def run (filename, actresses = true, categories = true, tease = true)
     extension = File.extname (filename)
 
@@ -35,7 +37,7 @@ class RenameRunner
 
       processed_name = processed_name + extension
 
-      processed_name = indexify_if_exists(processed_name)
+      processed_name = @@name_indexifier.indexify_if_exists(processed_name)
 
       p "Rename til '#{processed_name}'? Ok? [y]/n"
       inp = gets.chomp
@@ -70,14 +72,4 @@ class RenameRunner
     "#{input}_#{categories_names}"
   end
 
-  def indexify_if_exists (input)
-      ctr = 1
-      while File.exists?(input) do
-        input = input.gsub(/(_\(\d+\))?#{extension}/, "_(#{ctr})#{extension}")
-        p "Trying #{input}"
-        ctr += 1
-      end
-
-      input
-  end
 end
