@@ -9,13 +9,23 @@ class FfmpegProcessor
 	end
 
 	def keyframes (short_file_name)
+		puts "======================================================================"
+		puts ""
+		puts "ffprobe -show_frames -print_format json #{short_file_name}"
+		puts ""
+		puts "======================================================================"
 		JSON.parse(`ffprobe -show_frames -print_format json #{short_file_name}`)["frames"]
 	end
 
 	def tease (file, start_at, length_in, tease_name)
+		Dir.mkdir("tease") unless File.directory?("tease")
+		puts "======================================================================"
+		puts ""
+		puts "ffmpeg -i \"#{file}\" -g 1 -vcodec copy -acodec copy -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} \"tease/#{tease_name}\""
+		puts ""
+		puts "======================================================================"
 		puts "start_at: #{start_at} tts: #{time_to_str(start_at)} length_in: #{length_in}"
-		`ffmpeg -i "#{file}" -vcodec copy -acodec copy -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} "#{tease_name}"`
-		#puts "ffmpeg -i #{file} -vcodec copy -acodec copy -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} #{tease_name}"
+		`ffmpeg -i "#{file}" -g 1 -vcodec copy -acodec copy -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} "tease/#{tease_name}"`
 	end
 
 	private

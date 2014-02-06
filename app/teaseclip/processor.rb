@@ -13,24 +13,35 @@ class TeaseClipProcessor
 	end
 
 	def process (file)
-		start_at = get_time("start at")
-		length_in = get_time("length in")
-		tease_name = generate_tease_name(file)
-		just_before, just_after = find_keyframe_alts(file, start_at)
+		tease_complete = false
+		until tease_complete
+			start_at = get_time("start at")
+			if start_at == false
+				return
+			end	
+			ends_at = get_time("ends at")
+			if ends_at == false
+				return
+			end	
+			length_in = ends_at - start_at
+			tease_name = generate_tease_name(file)
+			
+			#just_before, just_after = find_keyframe_alts(file, start_at)
 
-		
-		puts "Du ønsket å starte på #{start_at}. Nærmeste keyframes er #{just_before} og #{just_after}"
-		puts "1) #{just_before}"
-		puts "2) #{just_after}"
-		
-		keyframe = "1" == gets.chomp ? just_before : just_after
+			#puts "Du ønsket å starte på #{start_at}. Nærmeste keyframes er #{just_before} og #{just_after}"
+			#puts "1) #{just_before}"
+			#puts "2) #{just_after}"
+			
+			#keyframe = "1" == gets.chomp ? just_before : just_after
 
-		done = false
-		until done
-			puts "Create #{tease_name}?"
-			if gets.chomp == "y" or gets.chomp == ""
-				done = true
-				@movie_processor.tease(file, keyframe, length_in, tease_name)
+			keyframe = start_at
+			done = false
+			until done
+				puts "Create #{tease_name}? [y]/n"
+				if gets.chomp == "y" or gets.chomp == ""
+					done = true
+					@movie_processor.tease(file, keyframe, length_in, tease_name)
+				end
 			end
 		end
 	end
@@ -58,36 +69,47 @@ class TeaseClipProcessor
 		lastkeyframe = keyframes[0]
 		just_before = nil
 		just_after = nil
-		puts "Found #{keyframes.size} video keyframes"
-		short_starts_on = [start_at - 15, 0].max
-		keyframes.sort.each do |keyframe|
-			if short_starts_on + keyframe > start_at
-				if !just_before
-					just_after = keyframe
-					just_before = lastkeyframe
+		puts keyframes.size
+		if keyframes.size == 0
+			puts "Found no video keyframes, can start at #{start_at}"
+			# todo: spør om endring av til / fra i tilfelle sample er for kort
+			return [ start_at, start_at ]
+		else
+			short_starts_on = [start_at - 15, 0].max
+			keyframes.sort.each do |keyframe|
+				if short_starts_on + keyframe > start_at
+					if !just_before
+						just_after = keyframe
+						just_before = lastkeyframe
+					end
 				end
+				lastkeyframe = keyframe
 			end
-			lastkeyframe = keyframe
-		end
 
-		puts "JB #{just_before} JA #{just_after}"
-		[short_starts_on + just_before, short_starts_on + just_after]
+			puts "JB #{just_before} JA #{just_after}"
+			return [short_starts_on + (just_before or 0), short_starts_on + (just_after or 0)]
+		end
 	end
 
 	def generate_tease_name (original)
+		extension = File.extname(original)
 		newname = original.sub(/_\[.*/, extension)
-		@name_indexifier (newname)
+		@name_indexifier.indexify_if_exists(newname)
 	end
 
 	def get_time(type)
 		result = nil
-		until result
-			puts "Tease #{type} hh:mm:ss"
+		while result.nil?
+			puts "Tease #{type} hh:mm:ss (type end to finish)"
 			inp = gets.chomp
-			puts "sjekker '#{inp}'"
-			match = inp.match(/\A(\d{2}):(\d{2}):(\d{2})\Z/)
-			if match
-				result = match[3].to_i + (match[2].to_i * 60) + (match[1].to_i * 3600)
+			if inp == "end"
+				result = false
+			else
+				puts "sjekker '#{inp}'"
+				match = inp.match(/\A((\d{2}):)?((\d{2}):)?(\d{2})\Z/)
+				if match
+					result = (match[5] or 0).to_i + (match[4] or 0).to_i * 60) + (match[2].to_i * 3600)
+				end
 			end
 		end
 

@@ -28,7 +28,7 @@ OptionParser.new do |opts|
   opts.on("-c", "--categories", "Add categories") do |v|
     options[:categories] = v
   end
-  opts.on("t", "--tease", "Create tease clips") do |v|
+  opts.on("-t", "--tease", "Create tease clips") do |v|
     options[:tease] = v
   end
   opts.on("--all", "Do everything") do |v|

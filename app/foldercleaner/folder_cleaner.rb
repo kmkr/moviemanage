@@ -1,3 +1,5 @@
+require 'fileutils'
+
 class FolderCleaner
 	def consider_clean
 		files = Dir.glob("**")
@@ -17,8 +19,8 @@ class FolderCleaner
 		folder = Dir.pwd
 		if inp == "y" or inp == ""
 			if wipe_files
-				Dir.glob("#{folder}/*").each do |file|
-					File.delete file
+				Dir.glob("#{folder}/**").each do |file|
+					FileUtils.rm_r file
 					p "Deleted #{file}"
 				end
 			end

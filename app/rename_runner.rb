@@ -37,13 +37,15 @@ class RenameRunner
 
       processed_name = processed_name + extension
 
-      processed_name = @@name_indexifier.indexify_if_exists(processed_name)
+      if processed_name != filename
+        processed_name = @@name_indexifier.indexify_if_exists(processed_name)
 
-      p "Rename til '#{processed_name}'? Ok? [y]/n"
-      inp = gets.chomp
-      done = inp.chomp == "" || inp.chomp == "y"
-      if done
-        File.rename filename, processed_name
+        p "Rename til '#{processed_name}'? Ok? [y]/n"
+        inp = gets.chomp
+        done = inp.chomp == "" || inp.chomp == "y"
+        if done
+          File.rename filename, processed_name
+        end
       end
 
       if tease
