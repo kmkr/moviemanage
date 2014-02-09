@@ -2,6 +2,7 @@
 
 require_relative '../common/file_finder'
 require_relative '../common/name_indexifier'
+require_relative '../common/ffmpeg_time_at_getter'
 require_relative 'ffmpeg_processor'
 require 'fileutils'
 
@@ -10,28 +11,33 @@ class TeaseClipProcessor
 	def initialize(movie_processor = FfmpegProcessor.new)
 		@movie_processor = movie_processor
 		@name_indexifier = NameIndexifier.new
+		@time_at_getter = FfmpegTimeAtGetter.new
 	end
 
 	def process (file)
 		tease_complete = false
 		until tease_complete
-			start_at, ends_at = get_time()
+			start_at, ends_at = @time_at_getter.get_time("Tease")
 			if start_at == false
 				return
 			end	
 
 			length_in = ends_at - start_at
 			tease_name = generate_tease_name(file)
-			
-			#just_before, just_after = find_keyframe_alts(file, start_at)
+		
+			if start_at > 0	
+				just_before, just_after = find_keyframe_alts(file, start_at)
 
-			#puts "Du ønsket å starte på #{start_at}. Nærmeste keyframes er #{just_before} og #{just_after}"
-			#puts "1) #{just_before}"
-			#puts "2) #{just_after}"
-			
-			#keyframe = "1" == gets.chomp ? just_before : just_after
+				puts "You requested #{start_at}. Closest keyframes are #{just_before} and #{just_after}"
+				puts "1) #{just_before}"
+				puts "2) #{just_after}"
+				puts "Enter requested start_at in seconds"
+				
+				keyframe = gets.chomp.to_f
+			else
+				keyframe = start_at
+			end
 
-			keyframe = start_at
 			done = false
 			until done
 				puts "Create #{tease_name}? [y]/n"
@@ -61,15 +67,13 @@ class TeaseClipProcessor
 
 	def find_keyframe_alts(file, start_at)
 		keyframes = find_keyframes(file, start_at)
-		puts "Start at #{start_at}"
-		#pkt_pts_time = 29.986333
-		# start_at = 30
+
 		lastkeyframe = keyframes[0]
 		just_before = nil
 		just_after = nil
 		puts keyframes.size
 		if keyframes.size == 0
-			puts "Found no video keyframes, can start at #{start_at}"
+			puts "Found no video keyframes, starting at #{start_at}"
 			# todo: spør om endring av til / fra i tilfelle sample er for kort
 			return [ start_at, start_at ]
 		else
@@ -95,43 +99,7 @@ class TeaseClipProcessor
 		@name_indexifier.indexify_if_exists(newname)
 	end
 
-	def get_time
-		result = nil
-		while result.nil?
-			puts "Tease start at and ends at in format hh:mm:ss (blank to finish)"
-			inp = gets.chomp
-			times = inp.split(/\s/)
-			start_at = times[0]
-			end_at = times[1]
-			if inp.empty?
-				result = false
-			elsif start_at and end_at
-				start_at_seconds = seconds_from_str (start_at)
-				end_at_seconds = seconds_from_str (end_at)
-				if start_at_seconds and end_at_seconds
-					result = [
-						start_at_seconds,
-						end_at_seconds
-					]
-				end
-			end
-		end
-
-		result
-	end
-
-	def seconds_from_str (str)
-		match = str.split(/\D/)
-		if match.size > 0
-			seconds = match.pop
-			minutes = match.pop
-			hours = match.pop
-
-			return seconds.to_i + (minutes or 0).to_i * 60 + (hours or 0).to_i * 3600
-		end
-
-		return nil
-	end
+	
 
 end
 

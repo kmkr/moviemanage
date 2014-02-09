@@ -31,7 +31,10 @@ OptionParser.new do |opts|
   opts.on("-t", "--tease", "Create tease clips") do |v|
     options[:tease] = v
   end
-  opts.on("--all", "Do everything") do |v|
+  opts.on("-ae", "--audio-extract", "Extract audio") do |v|
+    options[:audio_extract] = v
+  end
+  opts.on("--all", "Do everything (not including audio_extract)") do |v|
     options[:movie] = true
     options[:categories] = true
     options[:actresses] = true
@@ -42,17 +45,16 @@ end.parse!
 
 Settings.load!("config.yml")
 
-
 if options[:movie]
   MovieNameProcessor.new.process FileFinder.new.find
 end
 
-if options[:actresses] or options[:categories] or options[:tease]
+if options[:actresses] or options[:categories] or options[:tease] or options[:audio_extract]
   movieplayer = MoviePlayer.new
   FileFinder.new.find.each do |f|
     filename = File.basename(f)
     movieplayer.play(filename)
-    RenameRunner.new.run(filename, options[:actresses], options[:categories], options[:tease])
+    RenameRunner.new.run(filename, options[:actresses], options[:categories], options[:tease], options[:audio_extract])
     movieplayer.stop
   end
 end

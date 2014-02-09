@@ -4,7 +4,7 @@ class FileFinder
 	def find(keep_processed = false, relative_root = ".")
 		file_paths = []
 		Find.find(relative_root) do |path|
-			file_paths << path if path =~ /.*\.(mkv|mp4|avi|mpeg|iso)$/
+			file_paths << path if path =~ /.*\.(mkv|mp4|avi|mpeg|iso)$/ and path !~ /short_/
 		end
 
 		keep_processed ? file_paths : remove_processed(file_paths)

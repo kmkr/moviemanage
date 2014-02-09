@@ -5,6 +5,7 @@ require_relative 'common/name_indexifier'
 require_relative 'actresses/processor'
 require_relative 'categories/processor'
 require_relative 'teaseclip/processor'
+require_relative 'audioextract/audio_extractor'
 
 class RenameRunner
   @@file_name_cleaner = FileNameCleaner.new
@@ -12,7 +13,8 @@ class RenameRunner
   @@categories_processor = CategoriesProcessor.new
   @@tease_processor = TeaseClipProcessor.new
   @@name_indexifier = NameIndexifier.new
-  def run (filename, actresses = true, categories = true, tease = true)
+  @@audio_extractor = AudioExtractor.new
+  def run (filename, actresses, categories, tease, audio_extract)
     extension = File.extname (filename)
 
     done = false
@@ -21,6 +23,14 @@ class RenameRunner
       p "========================================================================"
       p "               Checks #{filename}"
       p "========================================================================"
+
+      if audio_extract
+        @@audio_extractor.extract(filename)
+        if !actresses and !categories and !tease
+          done = true
+          next
+        end
+      end
 
       if actresses
         actresses_names = @@actresses_processor.process(processed_name)
@@ -42,7 +52,9 @@ class RenameRunner
 
         p "Rename til '#{processed_name}'? Ok? [y]/n"
         inp = gets.chomp
-        done = true unless inp == "n"
+        if inp != "n"
+          done = true
+        end
         if done
           File.rename filename, processed_name
           puts "Renamed"

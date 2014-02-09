@@ -7,7 +7,10 @@ class FolderCleaner
 			p "Folder #{Dir.pwd} seems empty, delete? [y]/n"
 			consider_del
 		else
-			p "Still files #{files.inspect} inside, do you still want to del?"
+			p "Still files inside, do you still want to del?"
+			files.each_with_index do |file, index|
+				puts "#{index}) #{file}"
+			end
 			consider_del true
 		end
 
