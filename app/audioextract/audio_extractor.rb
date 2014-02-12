@@ -15,8 +15,7 @@ class AudioExtractor
 
 		if File.exists?("audio/#{audio_name}")
 			puts "Seems like there is an audio file from this vid. "
-			# todo: option to continue processing
-			return
+			# todo
 		end
 
 		until done_with_file
@@ -25,13 +24,21 @@ class AudioExtractor
 
 			if !start_at
 				done_with_file = true
+				puts "Do you want to keep #{file}? [y]/n"
+				inp = gets.chomp
+				if inp == "n"
+					File.delete file
+					puts "Deleted #{file}"
+				end
 				next
 			end
 
 			length_in = end_at - start_at
 
-			audio_name = @name_indexifier.indexify_if_exists(audio_name)
+			puts "Sjekker om #{audio_name} finnes fra for..."
+			audio_name = @name_indexifier.indexify_if_exists("audio/" + audio_name).sub("audio/", "")
 			@audio_processor.audio_extract(file, start_at, length_in, audio_name)
 		end
 	end
+
 end

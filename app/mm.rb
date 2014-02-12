@@ -31,9 +31,13 @@ OptionParser.new do |opts|
   opts.on("-t", "--tease", "Create tease clips") do |v|
     options[:tease] = v
   end
-  opts.on("-ae", "--audio-extract", "Extract audio") do |v|
+  opts.on("-e", "--audio-extract", "Extract audio") do |v|
     options[:audio_extract] = v
   end
+  opts.on("--offset FILENAME", "Offset file/start at file match") do |v|
+    options[:offset] = v
+  end
+
   opts.on("--all", "Do everything (not including audio_extract)") do |v|
     options[:movie] = true
     options[:categories] = true
@@ -51,7 +55,14 @@ end
 
 if options[:actresses] or options[:categories] or options[:tease] or options[:audio_extract]
   movieplayer = MoviePlayer.new
-  FileFinder.new.find.each do |f|
+  files = FileFinder.new.find
+  if options[:offset]
+    skipto = files.find_index { |file | file.match(options[:offset])} or 0
+    puts "Skipping to #{options[:offset]} (index #{skipto}) files"
+    files.shift(skipto)
+  end
+
+  files.each do |f|
     filename = File.basename(f)
     movieplayer.play(filename)
     RenameRunner.new.run(filename, options[:actresses], options[:categories], options[:tease], options[:audio_extract])

@@ -32,11 +32,11 @@ class FfmpegProcessor
 		Dir.mkdir("audio") unless File.directory?("audio")
 		puts "======================================================================"
 		puts ""
-		puts "ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i \"#{file}\" -acodec libmp3lame -ab 196k \"#{audio_name}\""
+		puts "ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i \"#{file}\" -acodec libmp3lame -ab 128k \"audio/#{audio_name}\""
 		puts ""
 		puts "======================================================================"
 		puts "start_at: #{start_at} tts: #{time_to_str(start_at)} length_in: #{length_in}"
-		`ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i "#{file}" -acodec libmp3lame -ab 196k "#{audio_name}"`
+		`ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i "#{file}" -acodec libmp3lame -ab 128k "audio/#{audio_name}"`
 	end
 
 	private
