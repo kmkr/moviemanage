@@ -41,7 +41,8 @@ class RenameRunner
         puts "New name er #{new_name}"
       rescue ProcessorException => e
         if e.reason == "delete"
-          puts "Skal delete #{filename}"
+          File.delete filename
+          puts "Deleted #{filename}"
         elsif e.reason == "skip"
           puts "Skipping #{filename}"          
           return

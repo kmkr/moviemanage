@@ -7,7 +7,7 @@ class CategoriesProcessor
 	end
 	
 	def process (current, original)
-		p "Categories?"
+		Console.get_input "Categories?"
 		@categories_helper.get.each do |ac|
 			p ac
 		end
