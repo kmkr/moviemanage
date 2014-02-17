@@ -17,37 +17,30 @@ class Splitter
 	end
 
 	def process (current, original)
-		tease_complete = false
-		until tease_complete
-			start_at, ends_at = @time_at_getter.get_time(@type)
-			if start_at == false
-				return
-			end	
+		start_at, ends_at = @time_at_getter.get_time(@type)
+		if start_at == false
+			return
+		end	
 
-			length_in = ends_at - start_at
-		
-			splitted_name = get_target_file_name (current)
-			if start_at > 0	
-				just_before, just_after = find_keyframe_alts(current, start_at)
+		splitted_name = get_target_file_name (current)
+		if start_at > 0	
+			just_before, just_after = find_keyframe_alts(current, start_at)
 
-				puts "You requested #{start_at}. Closest keyframes are #{just_before} and #{just_after}"
-				puts "1) #{just_before}"
-				puts "2) #{just_after}"
-				puts "Enter requested start_at in seconds"
-				
-				keyframe = gets.chomp.to_f
-			else
-				keyframe = start_at
-			end
+			puts "You requested #{start_at}. Closest keyframes are #{just_before} and #{just_after}"
+			puts "1) #{just_before}"
+			puts "2) #{just_after}"
+			puts "Enter requested start_at in seconds"
 
-			done = false
-			until done
-				puts "Create #{splitted_name}? [y]/n"
-				inp = gets.chomp
-				unless inp == "n"
-					done = true
-					@movie_processor.split(current, keyframe, length_in, splitted_name)
-				end
+			start_at = gets.chomp.to_f
+		end
+
+		done = false
+		until done
+			puts "Create #{splitted_name} from #{start_at} to #{ends_at}? [y]/n"
+			inp = gets.chomp
+			unless inp == "n"
+				@movie_processor.split(current, start_at, ends_at - start_at, splitted_name)
+				done = true
 			end
 		end
 
@@ -97,7 +90,6 @@ class Splitter
 				lastkeyframe = keyframe
 			end
 
-			puts "JB #{just_before} JA #{just_after}"
 			return [short_starts_on + (just_before or 0), short_starts_on + (just_after or 0)]
 		end
 	end

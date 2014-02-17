@@ -31,7 +31,7 @@ class FfmpegTimeAtGetter
 			minutes = match.pop
 			hours = match.pop
 
-			return seconds.to_i + (minutes or 0).to_i * 60 + (hours or 0).to_i * 3600
+			return seconds.to_i + ((minutes.to_i or 0) * 60) + ((hours.to_i or 0) * 3600)
 		end
 
 		return nil

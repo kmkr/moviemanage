@@ -38,7 +38,6 @@ class RenameRunner
       new_name = false
       begin
         new_name = processor.process(current_name, filename)
-        puts "New name er #{new_name}"
       rescue ProcessorException => e
         if e.reason == "delete"
           File.delete filename
@@ -66,7 +65,7 @@ class RenameRunner
     processors << @actresses_processor if actresses
     processors << @categories_processor if categories
     processors << @extension_appender if actresses or categories
-    processors << @indexifier_processor 
+    processors << @indexifier_processor if actresses or categories
     processors << @rename_processor if actresses or categories
     processors << @tease_processor if tease
     processors << @delete_or_keep_processor

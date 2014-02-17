@@ -7,11 +7,11 @@ class CategoriesProcessor
 	end
 	
 	def process (current, original)
-		Console.get_input "Categories?"
+		puts "Categories?"
 		@categories_helper.get.each do |ac|
-			p ac
+			puts ac
 		end
 
-		current + "_" + @categories_helper.parse(gets.chomp)
+		current + "_" + @categories_helper.parse(Console.get_input(""))
 	end
 end
