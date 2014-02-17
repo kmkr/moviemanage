@@ -1,10 +1,10 @@
 require "test/unit"
-require_relative "../../app/common/file_name_cleaner"
+require_relative "../../app/common/filename_cleaner"
  
-class TestFileNameCleaner < Test::Unit::TestCase
+class TestFilenameCleaner < Test::Unit::TestCase
 
   def setup
-    @cleaner = FileNameCleaner.new
+    @cleaner = FilenameCleaner.new
   end
  
   def test_strip_metadata

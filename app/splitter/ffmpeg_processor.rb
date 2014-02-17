@@ -17,15 +17,20 @@ class FfmpegProcessor
 		JSON.parse(`ffprobe -show_frames -print_format json #{short_file_name}`)["frames"]
 	end
 
-	def tease (file, start_at, length_in, tease_name)
-		Dir.mkdir("tease") unless File.directory?("tease")
+	def split (file, start_at, length_in, clip_name)
+		folder = clip_name.split(File::SEPARATOR)[0]
+		unless File.directory?(folder)
+			Dir.mkdir folder 
+			puts "Created '#{folder}'"
+		end
+
 		puts "======================================================================"
 		puts ""
-		puts "ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i \"#{file}\" -vcodec copy -acodec copy \"tease/#{tease_name}\""
+		puts "ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i \"#{file}\" -vcodec copy -acodec copy \"#{clip_name}\""
 		puts ""
 		puts "======================================================================"
 		puts "start_at: #{start_at} tts: #{time_to_str(start_at)} length_in: #{length_in}"
-		`ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i "#{file}" -vcodec copy -acodec copy "tease/#{tease_name}"`
+		`ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i "#{file}" -vcodec copy -acodec copy "#{clip_name}"`
 	end
 
 	def audio_extract (file, start_at, length_in, audio_name)

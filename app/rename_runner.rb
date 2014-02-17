@@ -1,90 +1,79 @@
 # encoding: utf-8
 
-require_relative 'common/file_name_cleaner'
-require_relative 'common/name_indexifier'
+require_relative 'common/filename_cleaner'
+require_relative 'common/console'
+require_relative 'common/processor_exception'
+
+require_relative 'audioextract/audio_extractor'
+require_relative 'processors/filename_cleaner/filename_cleaner_processor'
 require_relative 'actresses/processor'
 require_relative 'categories/processor'
-require_relative 'teaseclip/processor'
-require_relative 'audioextract/audio_extractor'
+require_relative 'processors/rename/rename_processor'
+require_relative 'splitter/splitter'
+require_relative 'processors/extension_appender/extension_appender'
+require_relative 'processors/indexifier_processor'
+require_relative 'processors/delete_or_keep_processor'
 
 class RenameRunner
-  @@file_name_cleaner = FileNameCleaner.new
-  @@actresses_processor = ActressesProcessor.new
-  @@categories_processor = CategoriesProcessor.new
-  @@tease_processor = TeaseClipProcessor.new
-  @@name_indexifier = NameIndexifier.new
-  @@audio_extractor = AudioExtractor.new
+
+  def initialize
+    @audio_extractor = AudioExtractor.new
+    @filename_cleaner_processor = FilenameCleanerProcessor.new
+    @actresses_processor = ActressesProcessor.new
+    @categories_processor = CategoriesProcessor.new
+    @rename_processor = RenameProcessor.new
+    @tease_processor = Splitter.new("Tease")
+    @extension_appender = ExtensionAppender.new
+    @indexifier_processor = IndexifierProcessor.new
+    @delete_or_keep_processor = DeleteOrKeepProcessor.new
+  end
+
   def run (filename, actresses, categories, tease, audio_extract)
-    extension = File.extname (filename)
+    Console.banner (filename)
+    current_name = filename
 
-    done = false
-    until done do
-      processed_name = @@file_name_cleaner.strip_metadata(@@file_name_cleaner.strip_ext(filename))
-      p "========================================================================"
-      p "               Checks #{filename}"
-      p "========================================================================"
+    processors = get_processors(actresses, categories, tease, audio_extract)
 
-      if audio_extract
-        @@audio_extractor.extract(filename)
-        if !actresses and !categories and !tease
-          done = true
-          next
+    processors.each do |processor|
+      new_name = false
+      begin
+        new_name = processor.process(current_name, filename)
+        puts "New name er #{new_name}"
+      rescue ProcessorException => e
+        if e.reason == "delete"
+          puts "Skal delete #{filename}"
+        elsif e.reason == "skip"
+          puts "Skipping #{filename}"          
+          return
+        elsif e.reason == "next"
+          puts "Skipping current processor"
         end
       end
 
-      if actresses
-        actresses_names = @@actresses_processor.process(processed_name)
-        if consider_special_handling(filename, actresses_names)
-          done = true
-          next
-        end
-        processed_name = "#{processed_name}_#{actresses_names}"
+      if new_name
+        current_name = new_name
       end
-
-      if categories
-        processed_name = get_categories_name(processed_name)
-      end
-
-      processed_name = processed_name + extension
-
-      if processed_name != filename
-        processed_name = @@name_indexifier.indexify_if_exists(processed_name)
-
-        p "Rename til '#{processed_name}'? Ok? [y]/n"
-        inp = gets.chomp
-        if inp != "n"
-          done = true
-        end
-        if done
-          File.rename filename, processed_name
-          puts "Renamed"
-        end
-      end
-
-      if tease
-        @@tease_processor.process(processed_name)
-      end
-
-      puts "Keep or del? 'del' to delete"
-      consider_special_handling(processed_name, gets.chomp)
     end
   end
 
   private
-  def consider_special_handling (filename, inp)
-    if inp == "del"
-      File.delete filename
-      p "Deleted #{filename}"
-      return true
-    elsif inp == "skip"
-      return true
-    end
-    return false
+
+  def get_processors (actresses, categories, tease, audio_extractor)
+    processors = []
+    processors << @audio_extractor if audio_extractor
+    processors << @filename_cleaner_processor if actresses or categories
+    processors << @actresses_processor if actresses
+    processors << @categories_processor if categories
+    processors << @extension_appender if actresses or categories
+    processors << @indexifier_processor 
+    processors << @rename_processor if actresses or categories
+    processors << @tease_processor if tease
+    processors << @delete_or_keep_processor
+
+    processors
   end
 
-  def get_categories_name (input)
-    categories_names = @@categories_processor.process(input)
-    "#{input}_#{categories_names}"
-  end
+
+
 
 end

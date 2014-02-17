@@ -8,27 +8,22 @@ class AudioExtractor
 		@name_indexifier = NameIndexifier.new
 	end
 
-	def extract (file)
+	def process (current, original = "")
 		done_with_file = false
 
-		audio_name = file.sub(File.extname(file), ".mp3")
-
-		if File.exists?("audio/#{audio_name}")
-			puts "Seems like there is an audio file from this vid. "
-			# todo
-		end
+		audio_name = current.sub(File.extname(current), ".mp3")
 
 		until done_with_file
-			puts "From where/to do you want to extract #{file}?"
+			puts "From where/to do you want to extract #{current}?"
 			start_at, end_at = @time_at_getter.get_time("Audio")
 
 			if !start_at
 				done_with_file = true
-				puts "Do you want to keep #{file}? [y]/n"
+				puts "Do you want to keep #{current}? [y]/n"
 				inp = gets.chomp
 				if inp == "n"
-					File.delete file
-					puts "Deleted #{file}"
+					File.delete current
+					puts "Deleted #{current}"
 				end
 				next
 			end
@@ -37,8 +32,10 @@ class AudioExtractor
 
 			puts "Sjekker om #{audio_name} finnes fra for..."
 			audio_name = @name_indexifier.indexify_if_exists("audio/" + audio_name).sub("audio/", "")
-			@audio_processor.audio_extract(file, start_at, length_in, audio_name)
+			@audio_processor.audio_extract(current, start_at, length_in, audio_name)
 		end
+
+		return current
 	end
 
 end

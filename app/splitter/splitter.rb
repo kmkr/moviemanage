@@ -1,32 +1,34 @@
 # encoding: utf-8
 
 require_relative '../common/file_finder'
-require_relative '../common/name_indexifier'
+
 require_relative '../common/ffmpeg_time_at_getter'
+require_relative '../name_generators/simple_name_generator'
 require_relative 'ffmpeg_processor'
 require 'fileutils'
 
-class TeaseClipProcessor
+class Splitter
 
-	def initialize(movie_processor = FfmpegProcessor.new)
+	def initialize(type = "Clip", name_generator = SimpleNameGenerator.new, movie_processor = FfmpegProcessor.new)
+		@type = type
+		@name_generator = name_generator
 		@movie_processor = movie_processor
-		@name_indexifier = NameIndexifier.new
 		@time_at_getter = FfmpegTimeAtGetter.new
 	end
 
-	def process (file)
+	def process (current, original)
 		tease_complete = false
 		until tease_complete
-			start_at, ends_at = @time_at_getter.get_time("Tease")
+			start_at, ends_at = @time_at_getter.get_time(@type)
 			if start_at == false
 				return
 			end	
 
 			length_in = ends_at - start_at
-			tease_name = generate_tease_name(file)
 		
+			splitted_name = get_target_file_name (current)
 			if start_at > 0	
-				just_before, just_after = find_keyframe_alts(file, start_at)
+				just_before, just_after = find_keyframe_alts(current, start_at)
 
 				puts "You requested #{start_at}. Closest keyframes are #{just_before} and #{just_after}"
 				puts "1) #{just_before}"
@@ -40,17 +42,24 @@ class TeaseClipProcessor
 
 			done = false
 			until done
-				puts "Create #{tease_name}? [y]/n"
+				puts "Create #{splitted_name}? [y]/n"
 				inp = gets.chomp
 				unless inp == "n"
 					done = true
-					@movie_processor.tease(file, keyframe, length_in, tease_name)
+					@movie_processor.split(current, keyframe, length_in, splitted_name)
 				end
 			end
 		end
+
+		current
 	end
 
 	private
+
+	def get_target_file_name (original_name)
+		target_file = @type.downcase + File::SEPARATOR + original_name
+		@name_generator.generate(target_file)
+	end
 
 	def find_keyframes(file, start_at)
 		short_file_name = "short_#{file}"
@@ -92,14 +101,4 @@ class TeaseClipProcessor
 			return [short_starts_on + (just_before or 0), short_starts_on + (just_after or 0)]
 		end
 	end
-
-	def generate_tease_name (original)
-		extension = File.extname(original)
-		newname = original.sub(/_\[.*/, extension)
-		@name_indexifier.indexify_if_exists(newname)
-	end
-
-	
-
 end
-

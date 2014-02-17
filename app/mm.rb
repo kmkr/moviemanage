@@ -6,6 +6,7 @@ require_relative 'moviename/processor'
 require_relative 'rename_runner'
 
 require_relative 'foldercleaner/folder_cleaner'
+require_relative 'splitter/splitter'
 require_relative 'mover/movie_mover'
 require_relative 'movieplayer/movie_player'
 require_relative 'common/file_finder'
@@ -37,8 +38,11 @@ OptionParser.new do |opts|
   opts.on("--offset FILENAME", "Offset file/start at file match") do |v|
     options[:offset] = v
   end
+  opts.on("-s", "--split", "Split large video") do |v|
+    options[:split] = v
+  end
 
-  opts.on("--all", "Do everything (not including audio_extract)") do |v|
+  opts.on("--all", "Do everything (not including audio_extract nor split)") do |v|
     options[:movie] = true
     options[:categories] = true
     options[:actresses] = true
@@ -53,7 +57,7 @@ if options[:movie]
   MovieNameProcessor.new.process FileFinder.new.find
 end
 
-if options[:actresses] or options[:categories] or options[:tease] or options[:audio_extract]
+if options[:actresses] or options[:categories] or options[:tease] or options[:audio_extract] or options[:split]
   movieplayer = MoviePlayer.new
   files = FileFinder.new.find
   if options[:offset]
@@ -65,6 +69,9 @@ if options[:actresses] or options[:categories] or options[:tease] or options[:au
   files.each do |f|
     filename = File.basename(f)
     movieplayer.play(filename)
+    if options[:split]
+      Splitter.new("Scene").process filename, filename
+    end
     RenameRunner.new.run(filename, options[:actresses], options[:categories], options[:tease], options[:audio_extract])
     movieplayer.stop
   end

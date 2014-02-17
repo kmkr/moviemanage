@@ -1,6 +1,6 @@
 require 'pathname'
 
-class FileNameCleaner
+class FilenameCleaner
 	def strip_ext(inp)
 		inp.gsub(File.extname(inp), "")
 	end

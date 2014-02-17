@@ -1,8 +1,8 @@
 # encoding: utf-8
-require_relative '../common/file_name_cleaner'
+require_relative '../common/filename_cleaner'
 class TxtFileHelper
 
-	@@cleaner = FileNameCleaner.new
+	@@cleaner = FilenameCleaner.new
 
 	def find_and_print (file_path)
 		txtFileName = @@cleaner.find_txt_name(file_path)

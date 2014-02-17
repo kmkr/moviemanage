@@ -2,14 +2,16 @@
 require_relative 'categories'
 
 class CategoriesProcessor
-	@@categories_helper = Categories.new
+	def initialize
+		@categories_helper = Categories.new
+	end
 	
-	def process (file_path)
+	def process (current, original)
 		p "Categories?"
-		@@categories_helper.get.each do |ac|
+		@categories_helper.get.each do |ac|
 			p ac
 		end
 
-		@@categories_helper.parse(gets.chomp)
+		current + "_" + @categories_helper.parse(gets.chomp)
 	end
 end

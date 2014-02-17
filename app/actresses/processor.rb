@@ -6,22 +6,23 @@ require_relative 'actress_name_cleaner'
 
 class ActressesProcessor
 
-	@@txt_file_helper = TxtFileHelper.new
-	@@tease_vid_helper = TeaseVidHelper.new
-	@@name_cleaner = ActressNameCleaner.new
+	def initialize
+		@txt_file_helper = TxtFileHelper.new
+		@tease_vid_helper = TeaseVidHelper.new
+		@name_cleaner = ActressNameCleaner.new
+	end
 	
-	def process (file_path)
+	def process (current, original = "")
 		
-		@@txt_file_helper.find_and_print(file_path)
-		@@tease_vid_helper.find_and_print(file_path)
+		@txt_file_helper.find_and_print(current)
+		@tease_vid_helper.find_and_print(current)
 
-		p "Actresses (separate by underscore) (del for delete, skip for next)"
 		actresses = ""
 		while actresses.length == 0
-			actresses = @@name_cleaner.clean gets.chomp
+			actresses = @name_cleaner.clean Console.get_input("Actresses (separate by underscore)")
 		end
 
-		actresses
+		current + "_" + actresses
 	end
 
 end

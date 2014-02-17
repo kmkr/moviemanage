@@ -1,8 +1,8 @@
-require_relative '../common/file_name_cleaner'
+require_relative '../common/filename_cleaner'
 require 'find'
 
 class TeaseVidHelper
-	@@cleaner = FileNameCleaner.new
+	@@cleaner = FilenameCleaner.new
 
 	def find_and_print (file_path)
 		tease_file_name = @@cleaner.find_tease_name(file_path)
