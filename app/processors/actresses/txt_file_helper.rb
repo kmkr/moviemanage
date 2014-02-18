@@ -1,5 +1,5 @@
 # encoding: utf-8
-require_relative '../common/filename_cleaner'
+require_relative '../../common/filename_cleaner'
 class TxtFileHelper
 
 	@@cleaner = FilenameCleaner.new

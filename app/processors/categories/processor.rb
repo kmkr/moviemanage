@@ -1,4 +1,3 @@
-# encoding: utf-8
 require_relative 'categories'
 
 class CategoriesProcessor
@@ -12,6 +11,6 @@ class CategoriesProcessor
 			puts ac
 		end
 
-		current + "_" + @categories_helper.parse(Console.get_input(""))
+		current + "_" + @categories_helper.parse(gets.chomp)
 	end
 end

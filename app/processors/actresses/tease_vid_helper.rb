@@ -1,4 +1,4 @@
-require_relative '../common/filename_cleaner'
+require_relative '../../common/filename_cleaner'
 require 'find'
 
 class TeaseVidHelper

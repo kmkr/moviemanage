@@ -1,4 +1,4 @@
-require_relative "../../common/filename_cleaner"
+require_relative "../common/filename_cleaner"
 class FilenameCleanerProcessor
 	def initialize
 		@cleaner = FilenameCleaner.new

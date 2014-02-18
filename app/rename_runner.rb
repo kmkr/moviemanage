@@ -1,16 +1,14 @@
-# encoding: utf-8
-
 require_relative 'common/filename_cleaner'
 require_relative 'common/console'
 require_relative 'common/processor_exception'
 
-require_relative 'audioextract/audio_extractor'
-require_relative 'processors/filename_cleaner/filename_cleaner_processor'
-require_relative 'actresses/processor'
-require_relative 'categories/processor'
-require_relative 'processors/rename/rename_processor'
+require_relative 'processors/audio_extractor'
+require_relative 'processors/filename_cleaner_processor'
+require_relative 'processors/actresses/processor'
+require_relative 'processors/categories/processor'
+require_relative 'processors/rename_processor'
 require_relative 'splitter/splitter'
-require_relative 'processors/extension_appender/extension_appender'
+require_relative 'processors/extension_appender'
 require_relative 'processors/indexifier_processor'
 require_relative 'processors/delete_or_keep_processor'
 
@@ -40,8 +38,9 @@ class RenameRunner
         new_name = processor.process(current_name, filename)
       rescue ProcessorException => e
         if e.reason == "delete"
-          File.delete filename
-          puts "Deleted #{filename}"
+          fn = if File.exists?(filename) then filename else new_name end
+          File.delete (fn)
+          puts "Deleted #{fn}"
         elsif e.reason == "skip"
           puts "Skipping #{filename}"          
           return
@@ -72,8 +71,5 @@ class RenameRunner
 
     processors
   end
-
-
-
 
 end

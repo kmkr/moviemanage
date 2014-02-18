@@ -9,11 +9,7 @@ class FfmpegProcessor
 	end
 
 	def keyframes (short_file_name)
-		puts "======================================================================"
-		puts ""
-		puts "ffprobe -show_frames -print_format json #{short_file_name}"
-		puts ""
-		puts "======================================================================"
+		Console.banner "ffprobe -show_frames -print_format json #{short_file_name}"
 		JSON.parse(`ffprobe -show_frames -print_format json #{short_file_name}`)["frames"]
 	end
 
@@ -24,29 +20,17 @@ class FfmpegProcessor
 			puts "Created '#{folder}'"
 		end
 
-		puts "======================================================================"
-		puts ""
-		puts "ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i \"#{file}\" -vcodec copy -acodec copy \"#{clip_name}\""
-		puts ""
-		puts "======================================================================"
-		puts "start_at: #{start_at} tts: #{time_to_str(start_at)} length_in: #{length_in}"
+		Console.banner "ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i \"#{file}\" -vcodec copy -acodec copy \"#{clip_name}\""
 		`ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i "#{file}" -vcodec copy -acodec copy "#{clip_name}"`
 	end
 
 	def audio_extract (file, start_at, length_in, audio_name)
 		Dir.mkdir("audio") unless File.directory?("audio")
-		puts "======================================================================"
-		puts ""
-		puts "ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i \"#{file}\" -acodec libmp3lame -ab 128k \"audio/#{audio_name}\""
-		puts ""
-		puts "======================================================================"
-		puts "start_at: #{start_at} tts: #{time_to_str(start_at)} length_in: #{length_in}"
+		Console.banner "ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i \"#{file}\" -acodec libmp3lame -ab 128k \"audio/#{audio_name}\""
 		`ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i "#{file}" -acodec libmp3lame -ab 128k "audio/#{audio_name}"`
 	end
 
-	private
 	def time_to_str (seconds)
-		puts "sjekker #{seconds}"
 		ss, ms = (1000*seconds).divmod(1000)
 		mm, ss = ss.divmod(60)            #=> [4515, 21]
 		hh, mm = mm.divmod(60)           #=> [75, 15]
