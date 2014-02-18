@@ -10,7 +10,10 @@ class FfmpegProcessor
 
 	def keyframes (short_file_name)
 		Console.banner "ffprobe -show_frames -print_format json #{short_file_name}"
-		JSON.parse(`ffprobe -show_frames -print_format json #{short_file_name}`)["frames"]
+		keyframes = JSON.parse(`ffprobe -show_frames -print_format json #{short_file_name}`)["frames"]
+		File.delete(short_file_name)
+		puts "Deleted #{short_file_name}"
+		keyframes
 	end
 
 	def split (file, start_at, length_in, clip_name)

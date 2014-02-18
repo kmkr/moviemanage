@@ -1,16 +1,12 @@
 #!/usr/bin/ruby
-# encoding: utf-8
+
 require 'optparse'
 
 require_relative 'moviename/processor'
-require_relative 'rename_runner'
-
-require_relative 'foldercleaner/folder_cleaner'
-require_relative 'splitter/splitter'
-require_relative 'mover/movie_mover'
-require_relative 'movieplayer/movie_player'
 require_relative 'common/file_finder'
-
+require_relative 'rename_runner'
+require_relative 'mover/movie_mover'
+require_relative 'foldercleaner/folder_cleaner'
 require_relative 'settings'
 
 options = {}
@@ -58,7 +54,7 @@ if options[:movie]
 end
 
 if options[:actresses] or options[:categories] or options[:tease] or options[:audio_extract] or options[:split]
-  movieplayer = MoviePlayer.new
+  
   files = FileFinder.new.find
   if options[:offset]
     skipto = files.find_index { |file | file.match(options[:offset])} or 0
@@ -67,13 +63,7 @@ if options[:actresses] or options[:categories] or options[:tease] or options[:au
   end
 
   files.each do |f|
-    filename = File.basename(f)
-    movieplayer.play(filename)
-    if options[:split]
-      Splitter.new("Scene").process filename, filename
-    end
-    RenameRunner.new.run(filename, options[:actresses], options[:categories], options[:tease], options[:audio_extract])
-    movieplayer.stop
+    RenameRunner.new.run(File.basename(f), options)
   end
 end
 

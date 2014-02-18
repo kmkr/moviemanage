@@ -11,10 +11,14 @@ require_relative 'splitter/splitter'
 require_relative 'processors/extension_appender'
 require_relative 'processors/indexifier_processor'
 require_relative 'processors/delete_or_keep_processor'
+require_relative 'processors/start_movie_processor'
+require_relative 'processors/end_movie_processor'
 
 class RenameRunner
 
   def initialize
+    @start_movie_processor = StartMovieProcessor.new
+    @scene_split_processor = Splitter.new("Scene")
     @audio_extractor = AudioExtractor.new
     @filename_cleaner_processor = FilenameCleanerProcessor.new
     @actresses_processor = ActressesProcessor.new
@@ -24,13 +28,14 @@ class RenameRunner
     @extension_appender = ExtensionAppender.new
     @indexifier_processor = IndexifierProcessor.new
     @delete_or_keep_processor = DeleteOrKeepProcessor.new
+    @end_movie_processor = EndMovieProcessor.new
   end
 
-  def run (filename, actresses, categories, tease, audio_extract)
+  def run (filename, options)
     Console.banner (filename)
     current_name = filename
 
-    processors = get_processors(actresses, categories, tease, audio_extract)
+    processors = get_processors(options)
 
     processors.each do |processor|
       new_name = false
@@ -38,7 +43,7 @@ class RenameRunner
         new_name = processor.process(current_name, filename)
       rescue ProcessorException => e
         if e.reason == "delete"
-          fn = if File.exists?(filename) then filename else new_name end
+          fn = if File.exists?(current_name) then current_name else filename end
           File.delete (fn)
           puts "Deleted #{fn}"
         elsif e.reason == "skip"
@@ -57,16 +62,19 @@ class RenameRunner
 
   private
 
-  def get_processors (actresses, categories, tease, audio_extractor)
+  def get_processors (options)
     processors = []
-    processors << @audio_extractor if audio_extractor
-    processors << @filename_cleaner_processor if actresses or categories
-    processors << @actresses_processor if actresses
-    processors << @categories_processor if categories
-    processors << @extension_appender if actresses or categories
-    processors << @indexifier_processor if actresses or categories
-    processors << @rename_processor if actresses or categories
-    processors << @tease_processor if tease
+    processors << @start_movie_processor 
+    processors << @scene_splitter_processor if options[:split]
+    processors << @audio_extractor if options[:audio_extractor]
+    processors << @filename_cleaner_processor if options[:actresses] or options[:categories]
+    processors << @actresses_processor if options[:actresses]
+    processors << @categories_processor if options[:categories]
+    processors << @extension_appender if options[:actresses] or options[:categories]
+    processors << @indexifier_processor if options[:actresses] or options[:categories]
+    processors << @rename_processor if options[:actresses] or options[:categories]
+    processors << @tease_processor if options[:tease]
+    processors << @end_movie_processor 
     processors << @delete_or_keep_processor
 
     processors
