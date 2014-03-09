@@ -19,18 +19,18 @@ class FfmpegProcessor
 	def split (file, start_at, length_in, clip_name)
 		folder = clip_name.split(File::SEPARATOR)[0]
 		unless File.directory?(folder)
-			Dir.mkdir folder 
+			Dir.mkdir folder
 			puts "Created '#{folder}'"
 		end
 
-		Console.banner "ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i \"#{file}\" -vcodec copy -acodec copy \"#{clip_name}\""
-		`ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i "#{file}" -vcodec copy -acodec copy "#{clip_name}"`
+		Console.banner "ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i \"#{file}\" -vcodec copy -acodec copy \"#{clip_name}\" -loglevel warning"
+		`ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i "#{file}" -vcodec copy -acodec copy "#{clip_name}" -loglevel warning`
 	end
 
 	def audio_extract (file, start_at, length_in, audio_name)
 		Dir.mkdir("audio") unless File.directory?("audio")
-		Console.banner "ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i \"#{file}\" -acodec libmp3lame -ab 128k \"audio/#{audio_name}\""
-		`ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i "#{file}" -acodec libmp3lame -ab 128k "audio/#{audio_name}"`
+		Console.banner "ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i \"#{file}\" -acodec libmp3lame -ab 128k \"audio/#{audio_name}\" -loglevel warning"
+		`ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i "#{file}" -acodec libmp3lame -ab 128k "audio/#{audio_name}" -loglevel warning`
 	end
 
 	def time_to_str (seconds)
