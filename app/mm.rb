@@ -37,6 +37,9 @@ OptionParser.new do |opts|
   opts.on("-s", "--split", "Split large video") do |v|
     options[:split] = v
   end
+  opts.on("-f FILENAME", "--filename FILENAME", "Use file instead of current folder") do |v|
+    options[:file] = v
+  end
 
   opts.on("--all", "Do everything (not including audio_extract nor split)") do |v|
     options[:movie] = true
@@ -49,15 +52,18 @@ end.parse!
 
 Settings.load!("config.yml")
 
+puts options[:file]
 if options[:movie]
-  MovieNameProcessor.new.process FileFinder.new.find
+  MovieNameProcessor.new.process (options[:file] or FileFinder.new.find)
 end
 
 if options[:actresses] or options[:categories] or options[:tease] or options[:audio_extract] or options[:split]
   
-  files = FileFinder.new.find
+  files = if options[:file] then [ options[:file] ] else FileFinder.new.find end
   if options[:offset]
-    skipto = files.find_index { |file | file.match(options[:offset])} or 0
+    puts "Looking for '#{options[:offset]}'"
+    puts files.inspect
+    skipto = files.find_index { |file | file.match(/.*#{options[:offset]}.*/) } or 0
     puts "Skipping to #{options[:offset]} (index #{skipto}) files"
     files.shift(skipto)
   end
