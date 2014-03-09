@@ -18,7 +18,7 @@ class RenameRunner
 
   def initialize
     @start_movie_processor = StartMovieProcessor.new
-    @scene_split_processor = Splitter.new("Scene")
+    @scene_splitter_processor = Splitter.new("Scene")
     @audio_extractor = AudioExtractor.new
     @filename_cleaner_processor = FilenameCleanerProcessor.new
     @actresses_processor = ActressesProcessor.new
@@ -46,6 +46,7 @@ class RenameRunner
           fn = if File.exists?(current_name) then current_name else filename end
           File.delete (fn)
           puts "Deleted #{fn}"
+          return
         elsif e.reason == "skip"
           puts "Skipping #{filename}"          
           return
@@ -66,7 +67,7 @@ class RenameRunner
     processors = []
     processors << @start_movie_processor 
     processors << @scene_splitter_processor if options[:split]
-    processors << @audio_extractor if options[:audio_extractor]
+    processors << @audio_extractor if options[:audio_extract]
     processors << @filename_cleaner_processor if options[:actresses] or options[:categories]
     processors << @actresses_processor if options[:actresses]
     processors << @categories_processor if options[:categories]

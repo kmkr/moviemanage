@@ -17,30 +17,32 @@ class Splitter
 	end
 
 	def process (current, original)
-		start_at, ends_at = @time_at_getter.get_time(@type)
-		if start_at == false
-			return
-		end	
+		while true
+			start_at, ends_at = @time_at_getter.get_time(@type)
+			if start_at == false
+				return
+			end	
 
-		splitted_name = get_target_file_name (current)
-		if start_at > 0	
-			just_before, just_after = find_keyframe_alts(current, start_at)
+			splitted_name = get_target_file_name (current)
+			if start_at < 0	
+				just_before, just_after = find_keyframe_alts(current, start_at)
 
-			puts "You requested #{start_at}. Closest keyframes are #{just_before} and #{just_after}"
-			puts "1) #{just_before}"
-			puts "2) #{just_after}"
-			puts "Enter requested start_at in seconds"
+				puts "You requested #{start_at}. Closest keyframes are #{just_before} and #{just_after}"
+				puts "1) #{just_before}"
+				puts "2) #{just_after}"
+				puts "Enter requested start_at in seconds"
 
-			start_at = gets.chomp.to_f
-		end
+				start_at = gets.chomp.to_f
+			end
 
-		done = false
-		until done
-			puts "Create #{splitted_name} from #{start_at} to #{ends_at}? [y]/n"
-			inp = gets.chomp
-			unless inp == "n"
-				@movie_processor.split(current, start_at, ends_at - start_at, splitted_name)
-				done = true
+			clip_done = false
+			until clip_done
+				puts "Create #{splitted_name} from #{start_at} to #{ends_at}? [y]/n"
+				inp = gets.chomp
+				unless inp == "n"
+					@movie_processor.split(current, start_at, ends_at - start_at, splitted_name)
+					clip_done = true
+				end
 			end
 		end
 
