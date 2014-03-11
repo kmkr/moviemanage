@@ -40,7 +40,7 @@ OptionParser.new do |opts|
   opts.on("-f FILENAME", "--filename FILENAME", "Use file instead of current folder") do |v|
     options[:file] = v
   end
-  opts.on("-r", "--remote", "Play file remote (need 'remote: http://ip:port' in config.yml)") do |v|
+  opts.on("-r NUM", "--remote NUM", "Play file remote. NUM is the last digit in IP address.") do |v|
     options[:remote] = v
   end
   opts.on("-o CONFIG", "--config CONFIG", "Use custom config file instead of config.yml") do |v|

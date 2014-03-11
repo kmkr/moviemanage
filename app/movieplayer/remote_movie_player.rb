@@ -2,8 +2,8 @@ require 'net/http'
 
 class RemoteMoviePlayer
 
-	def initialize
-		@url = Settings.remote
+	def initialize(remote)
+		@url = Settings.remote.gsub("{{num}}", remote)
 	end
 
 	def play(file_path)
