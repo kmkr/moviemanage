@@ -11,7 +11,7 @@ class Webserver
 	end
 
 	def listen
-		puts "listen"
+		puts "Listening on port 2000"
 		while (session = @webserver.accept)
 			request = session.gets
 			puts "Incoming request: '#{request}'"
@@ -29,7 +29,7 @@ class Webserver
 				puts "Could not parse file from #{request}. Missing 'file' parameter?"
 			end
 
-			session.print "HTTP/1.1 200/OK\r\nContent-type:application/json\r\n\r\n{\"status:\" \"ok\"}"
+			session.print "HTTP/1.1 204/OK\r\n"
 			session.close
 		end
 	end

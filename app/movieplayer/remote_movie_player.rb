@@ -22,6 +22,6 @@ class RemoteMoviePlayer
 		params = { :file => file_path, :wd => Dir.pwd }
 		uri.query = URI.encode_www_form(params)
 		res = Net::HTTP.get_response(uri)
-		puts res.body if res.is_a?(Net::HTTPSuccess)
+		puts res
 	end
 end
