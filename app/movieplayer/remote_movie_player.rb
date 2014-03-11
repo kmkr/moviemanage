@@ -3,17 +3,17 @@ require 'net/http'
 class RemoteMoviePlayer
 
 	def initialize
-		@host = Settings.remote
+		@url = Settings.remote
 	end
 
 	def play(file_path)
-		puts "Kjorer get mot #{@host}/play"
-		get("#{@host}/play", file_path)
+		puts "GET: #{@url}/play"
+		get("#{@url}/play", file_path)
 	end
 
 	def stop(file_path)
-		puts "Kjorer get mot #{@host}/stop"
-		get("#{@host}/stop", file_path)
+		puts "GET: #{@url}/stop"
+		get("#{@url}/stop", file_path)
 	end
 
 	private
@@ -22,6 +22,5 @@ class RemoteMoviePlayer
 		params = { :file => file_path, :wd => Dir.pwd }
 		uri.query = URI.encode_www_form(params)
 		res = Net::HTTP.get_response(uri)
-		puts res
 	end
 end

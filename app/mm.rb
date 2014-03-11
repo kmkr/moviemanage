@@ -43,6 +43,9 @@ OptionParser.new do |opts|
   opts.on("-r", "--remote", "Play file remote (need 'remote: http://ip:port' in config.yml)") do |v|
     options[:remote] = v
   end
+  opts.on("-o CONFIG", "--config CONFIG", "Use custom config file instead of config.yml") do |v|
+    options[:config] = v
+  end
 
   opts.on("--all", "Do everything (not including audio_extract nor split)") do |v|
     options[:movie] = true
@@ -53,7 +56,7 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-Settings.load!("config.yml")
+Settings.load!((options[:config] or "config.yml"))
 
 puts options[:file]
 if options[:movie]
