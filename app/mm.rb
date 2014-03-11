@@ -71,7 +71,8 @@ if options[:actresses] or options[:categories] or options[:tease] or options[:au
     files.shift(skipto)
   end
 
-  files.each do |f|
+  files.each_with_index do |f, index|
+    puts "Processing file number #{index+1} of #{files.length} (#{(index+1)/files.length})"
     RenameRunner.new(options).run(File.basename(f), options)
   end
 end
