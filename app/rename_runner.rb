@@ -16,8 +16,8 @@ require_relative 'processors/end_movie_processor'
 
 class RenameRunner
 
-  def initialize
-    @start_movie_processor = StartMovieProcessor.new
+  def initialize(options)
+    @start_movie_processor = StartMovieProcessor.new(options[:remote])
     @scene_splitter_processor = Splitter.new("Scene")
     @audio_extractor = AudioExtractor.new
     @filename_cleaner_processor = FilenameCleanerProcessor.new
@@ -28,7 +28,7 @@ class RenameRunner
     @extension_appender = ExtensionAppender.new
     @indexifier_processor = IndexifierProcessor.new
     @delete_or_keep_processor = DeleteOrKeepProcessor.new
-    @end_movie_processor = EndMovieProcessor.new
+    @end_movie_processor = EndMovieProcessor.new(options[:remote])
   end
 
   def run (filename, options)

@@ -40,6 +40,9 @@ OptionParser.new do |opts|
   opts.on("-f FILENAME", "--filename FILENAME", "Use file instead of current folder") do |v|
     options[:file] = v
   end
+  opts.on("-r", "--remote", "Play file remote (need 'remote: http://ip:port' in config.yml)") do |v|
+    options[:remote] = v
+  end
 
   opts.on("--all", "Do everything (not including audio_extract nor split)") do |v|
     options[:movie] = true
@@ -69,7 +72,7 @@ if options[:actresses] or options[:categories] or options[:tease] or options[:au
   end
 
   files.each do |f|
-    RenameRunner.new.run(File.basename(f), options)
+    RenameRunner.new(options).run(File.basename(f), options)
   end
 end
 

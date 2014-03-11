@@ -1,18 +1,15 @@
-require_relative '../common/file_finder'
-require 'fileutils'
-
 class MoviePlayer
 
 	def play(file_path)
-		Thread.new do
-			`killall -9 vlc`
-			`vlc "#{file_path}"`
-		end
+		puts "Playing #{file_path}"
+		@lastpid = spawn("vlc \"#{file_path}\"")
+		Process.detach(@lastpid)
 	end
 
-	def stop
-		Thread.new do
-			`killall -9 vlc`
+	def stop(file_path)
+		if @lastpid
+			puts "Stopping #{@lastpid}"
+			Process.kill("HUP", @lastpid)
 		end
 	end
 end
