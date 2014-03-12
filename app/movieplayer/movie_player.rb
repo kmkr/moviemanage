@@ -8,6 +8,7 @@ class MoviePlayer
 
 	def stop(file_path)
 		if @lastpid
+			puts "Killing #{@lastpid}"
 			Process.kill("HUP", @lastpid)
 		end
 	end
