@@ -35,14 +35,11 @@ class Splitter
 				start_at = gets.chomp.to_f
 			end
 
-			clip_done = false
-			until clip_done
-				puts "Create #{splitted_name} from #{start_at} to #{ends_at}? [y]/n"
-				inp = gets.chomp
-				unless inp == "n"
-					@movie_processor.split(current, start_at, ends_at - start_at, splitted_name)
-					clip_done = true
-				end
+			puts "Create #{splitted_name} from #{start_at} to #{ends_at}? [y]/n"
+			inp = gets.chomp
+			unless inp == "n"
+				@movie_processor.split(current, start_at, ends_at - start_at, splitted_name)
+				clip_done = true
 			end
 		end
 
