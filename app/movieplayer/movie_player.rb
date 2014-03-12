@@ -9,7 +9,11 @@ class MoviePlayer
 	def stop(file_path)
 		if @lastpid
 			puts "Killing #{@lastpid}"
-			Process.kill("HUP", @lastpid)
+			begin
+				Process.kill("HUP", @lastpid)
+			rescue Errno::ESRCH => e
+				puts e
+			end
 		end
 	end
 end
