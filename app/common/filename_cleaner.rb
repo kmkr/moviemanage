@@ -6,7 +6,7 @@ class FilenameCleaner
 	end
 
 	def strip_metadata(inp)
-		inp.gsub(/__.*/, "")
+		inp.gsub(/__.*/, "").gsub(/_\(\d+\)/, "")
 	end
 
 	def file_only (path)
