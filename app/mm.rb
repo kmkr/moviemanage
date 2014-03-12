@@ -5,9 +5,12 @@ require 'optparse'
 require_relative 'moviename/processor'
 require_relative 'common/file_finder'
 require_relative 'rename_runner'
+require_relative 'repl/repl'
 require_relative 'mover/movie_mover'
 require_relative 'foldercleaner/folder_cleaner'
 require_relative 'settings'
+require_relative 'processors/start_movie_processor'
+require_relative 'processors/end_movie_processor'
 
 options = {}
 OptionParser.new do |opts|
@@ -40,19 +43,14 @@ OptionParser.new do |opts|
   opts.on("-f FILENAME", "--filename FILENAME", "Use file instead of current folder") do |v|
     options[:file] = v
   end
-  opts.on("-r NUM", "--remote NUM", "Play file remote. NUM is the last digit in IP address.") do |v|
+  opts.on("-r ARG", "--remote ARG", "Play file remote. ARG will be interpolated into template in Settings.remote.") do |v|
     options[:remote] = v
   end
   opts.on("-o CONFIG", "--config CONFIG", "Use custom config file instead of config.yml") do |v|
     options[:config] = v
   end
-
-  opts.on("--all", "Do everything (not including audio_extract nor split)") do |v|
-    options[:movie] = true
-    options[:categories] = true
-    options[:actresses] = true
-    options[:move] = true
-    options[:tease] = true
+  opts.on("-u", "--repl", "Use REPL-ui") do |v|
+    options[:repl] = v
   end
 end.parse!
 
@@ -63,7 +61,7 @@ if options[:movie]
   MovieNameProcessor.new.process (options[:file] or FileFinder.new.find)
 end
 
-if options[:actresses] or options[:categories] or options[:tease] or options[:audio_extract] or options[:split]
+if options[:actresses] or options[:categories] or options[:tease] or options[:audio_extract] or options[:split] or options[:repl]
   
   files = if options[:file] then [ options[:file] ] else FileFinder.new.find end
   if options[:offset]
@@ -75,8 +73,15 @@ if options[:actresses] or options[:categories] or options[:tease] or options[:au
   end
 
   files.each_with_index do |f, index|
-    puts "Processing file number #{index+1} of #{files.length} (#{(index+1)/files.length})"
-    RenameRunner.new(options).run(File.basename(f), options)
+    puts "Processing file number #{index+1} of #{files.length} (#{(index+1)/files.length}%)"
+    file = File.basename(f)
+    StartMovieProcessor.new(options[:remote]).process file, file
+    if options[:repl] 
+      ReplRunner.new.run(file, options)
+    else
+      RenameRunner.new(options).run(file, options)
+    end
+    EndMovieProcessor.new(options[:remote]).process file, file
   end
 end
 

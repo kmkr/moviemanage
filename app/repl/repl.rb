@@ -4,60 +4,64 @@ require_relative '../processors/audio_extractor'
 require_relative '../processors/actresses/processor'
 require_relative '../processors/categories/processor'
 require_relative '../processors/rename_processor'
+require_relative '../processors/filename_cleaner_processor'
 require_relative '../splitter/splitter'
 require_relative '../processors/extension_appender'
+require_relative '../processors/delete_or_keep_processor'
 require_relative '../processors/indexifier_processor'
-require_relative '../movieplayer/remote_movie_player'
-require_relative '../settings'
+require_relative '../common/processor_exception'
 
-class Repl
+class ReplRunner
 	def initialize
-		Settings.load! "config.yml"
-		@movie_player = RemoteMoviePlayer.new("100")
 		@processors = [
 			{ :description => "Split", :subprocessors => Splitter.new("Scene") },
 			{ :description => "Extract audio", :subprocessors => AudioExtractor.new },
-			{ :description => "Set actress name", :subprocessors => [ ActressesProcessor.new, IndexifierProcessor.new, ExtensionAppender.new, RenameProcessor.new ] },
-			{ :description => "Set categories", :subprocessors => [ CategoriesProcessor.new, IndexifierProcessor.new, ExtensionAppender.new, RenameProcessor.new ] },
-			{ :description => "Tease", :subprocessors => Splitter.new("Tease") }
+			{ :description => "Set actress name", :subprocessors => [ FilenameCleanerProcessor.new, ActressesProcessor.new, IndexifierProcessor.new, ExtensionAppender.new, RenameProcessor.new ] },
+			{ :description => "Set categories", :subprocessors => [ FilenameCleanerProcessor.new, CategoriesProcessor.new, IndexifierProcessor.new, ExtensionAppender.new, RenameProcessor.new ] },
+			{ :description => "Tease", :subprocessors => Splitter.new("Tease") },
+			{ :description => "Delete", :subprocessors => DeleteOrKeepProcessor.new }
 		]
 	end
 
-	def start
-		files = FileFinder.new.find
-		files.each do |file|
-			file = File.basename(file)
-			puts "\e[H\e[2J"
-			@movie_player.play file
-			puts "What do you want to do with #{file}?"
+	def run (filename, options)
+		#puts "\e[H\e[2J"
 
-			while true
-				@processors.each_with_index do |processor, index|
-					puts "#{index+1}) #{processor[:description]}"
-				end
-				puts ""
-				puts "n) next file"
+		current_name = filename
+		last_name = filename
+		while true
+			puts "What do you want to do with #{current_name}?"
+			@processors.each_with_index do |processor, index|
+				puts "#{index+1}) #{processor[:description]}"
+			end
+			puts ""
+			puts "n) next file"
 
-				index = get_index(@processors.length)
-				next unless index
+			index = get_index(@processors.length)
+			return unless index
 
-				original_name = file
-				current_name = file
+			processor = @processors[index]
+			subprocessors = processor[:subprocessors]
 
-				processor = @processors[index]
-				subprocessors = processor[:subprocessors]
-
-				unless subprocessors.is_a?(Array)
-					subprocessors = [ subprocessors ] 
-				end
-				subprocessors.each do |subprocessor|
-					new_name = subprocessor.process(current_name, original_name)
-					current_name = new_name if new_name
-				end
-				puts "What do you want to do next with #{file}?"
+			unless subprocessors.is_a?(Array)
+				subprocessors = [ subprocessors ] 
 			end
 
-			@movie_player.stop file
+			subprocessors.each do |subprocessor|
+				new_name = false
+				begin
+					new_name = subprocessor.process(current_name, last_name)
+				rescue ProcessorException => e
+					if e.reason == "delete"
+						fn = if File.exists?(current_name) then current_name else last_name end
+						File.delete(fn)
+						puts "Deleted #{fn}"
+						return
+					end
+				end
+				current_name = new_name if new_name
+			end
+
+			last_name = current_name
 		end
 	end
 
@@ -76,5 +80,3 @@ class Repl
 		end
 	end
 end
-
-Repl.new.start

@@ -11,13 +11,11 @@ require_relative 'splitter/splitter'
 require_relative 'processors/extension_appender'
 require_relative 'processors/indexifier_processor'
 require_relative 'processors/delete_or_keep_processor'
-require_relative 'processors/start_movie_processor'
-require_relative 'processors/end_movie_processor'
+
 
 class RenameRunner
 
   def initialize(options)
-    @start_movie_processor = StartMovieProcessor.new(options[:remote])
     @scene_splitter_processor = Splitter.new("Scene")
     @audio_extractor = AudioExtractor.new
     @filename_cleaner_processor = FilenameCleanerProcessor.new
@@ -28,7 +26,6 @@ class RenameRunner
     @extension_appender = ExtensionAppender.new
     @indexifier_processor = IndexifierProcessor.new
     @delete_or_keep_processor = DeleteOrKeepProcessor.new
-    @end_movie_processor = EndMovieProcessor.new(options[:remote])
   end
 
   def run (filename, options)
@@ -65,7 +62,6 @@ class RenameRunner
 
   def get_processors (options)
     processors = []
-    processors << @start_movie_processor 
     processors << @scene_splitter_processor if options[:split]
     processors << @audio_extractor if options[:audio_extract]
     processors << @filename_cleaner_processor if options[:actresses] or options[:categories]
@@ -75,7 +71,6 @@ class RenameRunner
     processors << @indexifier_processor if options[:actresses] or options[:categories]
     processors << @rename_processor if options[:actresses] or options[:categories]
     processors << @tease_processor if options[:tease]
-    processors << @end_movie_processor 
     processors << @delete_or_keep_processor
 
     processors
