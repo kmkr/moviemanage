@@ -62,7 +62,6 @@ end
 
 Settings.load!(config)
 
-puts options[:file]
 if options[:movie]
   MovieNameProcessor.new.process (options[:file] or FileFinder.new.find)
 end
