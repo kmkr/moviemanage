@@ -1,20 +1,20 @@
-require_relative 'common/filename_cleaner'
-require_relative 'common/console'
-require_relative 'common/processor_exception'
-require_relative 'common/processor_exception_handler'
+require_relative '../common/filename_cleaner'
+require_relative '../common/console'
+require_relative '../common/processor_exception'
+require_relative '../common/processor_exception_handler'
 
-require_relative 'processors/audio_extractor'
-require_relative 'processors/filename_cleaner_processor'
-require_relative 'processors/actresses/processor'
-require_relative 'processors/categories/processor'
-require_relative 'processors/rename_processor'
-require_relative 'splitter/splitter'
-require_relative 'processors/extension_appender'
-require_relative 'processors/indexifier_processor'
-require_relative 'processors/delete_or_keep_processor'
+require_relative '../processors/audio_extractor'
+require_relative '../processors/filename_cleaner_processor'
+require_relative '../processors/actresses/processor'
+require_relative '../processors/categories/processor'
+require_relative '../processors/rename_processor'
+require_relative '../splitter/splitter'
+require_relative '../processors/extension_appender'
+require_relative '../processors/indexifier_processor'
+require_relative '../processors/delete_or_keep_processor'
 
 
-class RenameRunner
+class SequentialTaskInterface
 
   def initialize(options)
     @scene_splitter_processor = Splitter.new("Scene")

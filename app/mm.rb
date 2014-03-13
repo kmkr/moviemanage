@@ -4,8 +4,8 @@ require 'optparse'
 
 require_relative 'moviename/processor'
 require_relative 'common/file_finder'
-require_relative 'rename_runner'
-require_relative 'repl/repl'
+require_relative 'user_interfaces/repl_interface'
+require_relative 'user_interfaces/sequential_task_interface'
 require_relative 'mover/movie_mover'
 require_relative 'foldercleaner/folder_cleaner'
 require_relative 'settings'
@@ -79,13 +79,14 @@ if options[:actresses] or options[:categories] or options[:tease] or options[:au
   end
 
   files.each_with_index do |f, index|
-    puts "Processing file number #{index+1} of #{files.length} (#{((index+1)/files.length}*100).to_i%)"
+    percentage = (((index+1) / files.length) * 100).to_i
+    puts "Processing file number #{index+1} of #{files.length} (#{percentage}%)"
     file = File.basename(f)
     StartMovieProcessor.new(options[:remote]).process file, file
     if options[:repl] 
-      ReplRunner.new.run(file, options)
+      ReplInterface.new.run(file, options)
     else
-      RenameRunner.new(options).run(file, options)
+      SequentialTaskInterface.new(options).run(file, options)
     end
     EndMovieProcessor.new(options[:remote]).process file, file
   end

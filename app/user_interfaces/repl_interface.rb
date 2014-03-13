@@ -12,7 +12,7 @@ require_relative '../processors/indexifier_processor'
 require_relative '../common/processor_exception'
 require_relative '../common/processor_exception_handler'
 
-class ReplRunner
+class ReplInterface
 	def initialize
 		@tasks = [
 			{ :description => "Split", :processors => Splitter.new("Scene") },
