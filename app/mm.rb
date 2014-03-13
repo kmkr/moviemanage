@@ -46,7 +46,7 @@ OptionParser.new do |opts|
   opts.on("-r ARG", "--remote ARG", "Play file remote. ARG will be interpolated into template in Settings.remote.") do |v|
     options[:remote] = v
   end
-  opts.on("-o CONFIG", "--config CONFIG", "Use custom config file instead of config.yml. Will override ENV['mm.config.client']") do |v|
+  opts.on("-o CONFIG", "--config CONFIG", "Use custom config file instead of config.yml. Will override ENV['MM_CLIENT_CONFIG']") do |v|
     options[:config] = v
   end
   opts.on("-u", "--repl", "Use REPL-ui") do |v|
@@ -56,7 +56,7 @@ end.parse!
 
 config = options[:config]
 unless config
-  config = ENV['mm.config.client']
+  config = ENV['MM_CLIENT_CONFIG']
   config = "config.yml" unless config
 end
 

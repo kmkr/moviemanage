@@ -55,11 +55,11 @@ class Webserver
 	end
 end
 
-config = ENV['mm.config.server']
+config = ENV['MM_SERVER_CONFIG']
 config = ARGV[0] unless config
 
 unless config
-	puts "Supply config file as argument, or set ENV['mm.config.server']"
+	puts "Supply config file as argument, or set ENV['MM_SERVER_CONFIG']"
 	exit
 end
 
