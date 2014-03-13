@@ -50,7 +50,7 @@ class ReplInterface
 				begin
 					new_name = processor.process(current_name, last_name)
 				rescue ProcessorException => e
-					ProcessorExceptionHandler.new.handle(e)
+					ProcessorExceptionHandler.new.handle(e, current_name, last_name)
 				end
 				current_name = new_name if new_name
 			end

@@ -40,7 +40,7 @@ class SequentialTaskInterface
       begin
         new_name = processor.process(current_name, filename)
       rescue ProcessorException => e
-        ProcessorExceptionHandler.new.handle(e)
+        ProcessorExceptionHandler.new.handle(e, current_name, filename)
       end
 
       if new_name

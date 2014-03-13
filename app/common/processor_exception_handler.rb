@@ -1,10 +1,13 @@
 class ProcessorExceptionHandler
-	def handle(e)
+	def handle(e, *filename_candidates)
 		if e.reason == "delete"
-			fn = if File.exists?(current_name) then current_name else filename end
-			File.delete (fn)
-			puts "Deleted #{fn}"
-			return
+			filename_candidates.each do |fc|
+				if File.exists?(fc)
+					File.delete (fc)
+					puts "Deleted #{fc}"
+					return
+				end
+			end
 		elsif e.reason == "skip"
 			puts "Skipping #{filename}"          
 			return
