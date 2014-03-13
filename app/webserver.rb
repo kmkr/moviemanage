@@ -63,4 +63,4 @@ unless config
 	exit
 end
 
-Webserver.new(ARGV[0]).listen
+Webserver.new(config).listen
