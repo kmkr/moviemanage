@@ -8,8 +8,12 @@ class TeaseVidHelper
 		tease_file_name = @@cleaner.find_tease_name(file_path)
 
 		results = []
-		Find.find(Settings.actresses["tease_location"]) do |path|
-			results << path if path =~ /.*#{tease_file_name}.*/
+		begin
+			Find.find(Settings.actresses["tease_location"]) do |path|
+				results << path if path =~ /.*#{tease_file_name}.*/
+			end
+		rescue Errno::ENOENT => e
+			puts "Error while scanning tease_location: #{e}"
 		end
 
 		if results.length > 0
