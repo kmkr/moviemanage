@@ -4,7 +4,7 @@ require 'socket'
 require 'uri'
 require 'cgi'
 require_relative 'movieplayer/movie_player'
-require_relative 'settings'
+require_relative 'common/settings'
 
 class Webserver
 

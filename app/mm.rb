@@ -8,7 +8,7 @@ require_relative 'user_interfaces/repl_interface'
 require_relative 'user_interfaces/sequential_task_interface'
 require_relative 'mover/movie_mover'
 require_relative 'foldercleaner/folder_cleaner'
-require_relative 'settings'
+require_relative 'common/settings'
 require_relative 'processors/start_movie_processor'
 require_relative 'processors/end_movie_processor'
 
