@@ -1,6 +1,7 @@
 require_relative 'common/filename_cleaner'
 require_relative 'common/console'
 require_relative 'common/processor_exception'
+require_relative 'common/processor_exception_handler'
 
 require_relative 'processors/audio_extractor'
 require_relative 'processors/filename_cleaner_processor'
@@ -39,17 +40,7 @@ class RenameRunner
       begin
         new_name = processor.process(current_name, filename)
       rescue ProcessorException => e
-        if e.reason == "delete"
-          fn = if File.exists?(current_name) then current_name else filename end
-          File.delete (fn)
-          puts "Deleted #{fn}"
-          return
-        elsif e.reason == "skip"
-          puts "Skipping #{filename}"          
-          return
-        elsif e.reason == "next"
-          puts "Skipping current processor"
-        end
+        ProcessorExceptionHandler.new.handle(e)
       end
 
       if new_name

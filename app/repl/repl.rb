@@ -10,6 +10,7 @@ require_relative '../processors/extension_appender'
 require_relative '../processors/delete_or_keep_processor'
 require_relative '../processors/indexifier_processor'
 require_relative '../common/processor_exception'
+require_relative '../common/processor_exception_handler'
 
 class ReplRunner
 	def initialize
@@ -49,12 +50,7 @@ class ReplRunner
 				begin
 					new_name = processor.process(current_name, last_name)
 				rescue ProcessorException => e
-					if e.reason == "delete"
-						fn = if File.exists?(current_name) then current_name else last_name end
-						File.delete(fn)
-						puts "Deleted #{fn}"
-						return
-					end
+					ProcessorExceptionHandler.new.handle(e)
 				end
 				current_name = new_name if new_name
 			end

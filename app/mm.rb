@@ -79,7 +79,7 @@ if options[:actresses] or options[:categories] or options[:tease] or options[:au
   end
 
   files.each_with_index do |f, index|
-    puts "Processing file number #{index+1} of #{files.length} (#{(index+1)/files.length}%)"
+    puts "Processing file number #{index+1} of #{files.length} (#{((index+1)/files.length}*100).to_i%)"
     file = File.basename(f)
     StartMovieProcessor.new(options[:remote]).process file, file
     if options[:repl] 
