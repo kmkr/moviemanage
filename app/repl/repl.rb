@@ -13,13 +13,13 @@ require_relative '../common/processor_exception'
 
 class ReplRunner
 	def initialize
-		@processors = [
-			{ :description => "Split", :subprocessors => Splitter.new("Scene") },
-			{ :description => "Extract audio", :subprocessors => AudioExtractor.new },
-			{ :description => "Set actress name", :subprocessors => [ FilenameCleanerProcessor.new, ActressesProcessor.new, IndexifierProcessor.new, ExtensionAppender.new, RenameProcessor.new ] },
-			{ :description => "Set categories", :subprocessors => [ FilenameCleanerProcessor.new, CategoriesProcessor.new, IndexifierProcessor.new, ExtensionAppender.new, RenameProcessor.new ] },
-			{ :description => "Tease", :subprocessors => Splitter.new("Tease") },
-			{ :description => "Delete", :subprocessors => DeleteOrKeepProcessor.new }
+		@tasks = [
+			{ :description => "Split", :processors => Splitter.new("Scene") },
+			{ :description => "Extract audio", :processors => AudioExtractor.new },
+			{ :description => "Set actress name", :processors => [ FilenameCleanerProcessor.new, ActressesProcessor.new, IndexifierProcessor.new, ExtensionAppender.new, RenameProcessor.new ] },
+			{ :description => "Set categories", :processors => [ FilenameCleanerProcessor.new, CategoriesProcessor.new, IndexifierProcessor.new, ExtensionAppender.new, RenameProcessor.new ] },
+			{ :description => "Tease", :processors => Splitter.new("Tease") },
+			{ :description => "Delete", :processors => DeleteOrKeepProcessor.new }
 		]
 	end
 
@@ -30,26 +30,24 @@ class ReplRunner
 		last_name = filename
 		while true
 			puts "What do you want to do with #{current_name}?"
-			@processors.each_with_index do |processor, index|
+			@tasks.each_with_index do |processor, index|
 				puts "#{index+1}) #{processor[:description]}"
 			end
 			puts ""
 			puts "n) next file"
 
-			index = get_index(@processors.length)
+			index = get_index(@tasks.length)
 			return unless index
 
-			processor = @processors[index]
-			subprocessors = processor[:subprocessors]
+			task = @tasks[index]
+			processors = task[:processors]
 
-			unless subprocessors.is_a?(Array)
-				subprocessors = [ subprocessors ] 
-			end
+			processors = [ processors ]  unless processors.is_a?(Array)
 
-			subprocessors.each do |subprocessor|
+			processors.each do |processor|
 				new_name = false
 				begin
-					new_name = subprocessor.process(current_name, last_name)
+					new_name = processor.process(current_name, last_name)
 				rescue ProcessorException => e
 					if e.reason == "delete"
 						fn = if File.exists?(current_name) then current_name else last_name end
