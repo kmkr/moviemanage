@@ -22,7 +22,11 @@ class ActressesProcessor
 			actresses = @name_cleaner.clean Console.get_input("Actresses (separate by underscore)")
 		end
 
-		current + "_" + actresses
+		if actresses
+			current + "_" + actresses
+		else
+			current
+		end
 	end
 
 end

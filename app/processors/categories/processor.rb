@@ -11,6 +11,11 @@ class CategoriesProcessor
 			puts ac
 		end
 
-		current + "_" + @categories_helper.parse(gets.chomp)
+		categories_str = @categories_helper.parse(gets.chomp)
+		if categories_str
+			current + "_" + categories_str
+		else
+			current
+		end
 	end
 end

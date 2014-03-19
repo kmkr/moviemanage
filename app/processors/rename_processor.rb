@@ -5,8 +5,9 @@ class RenameProcessor
 		if input != "n"
 			File.rename original, current
 			puts "Renamed"
+			return current
 		end
 
-		current
+		return original
 	end
 end
