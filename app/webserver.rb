@@ -38,6 +38,7 @@ class Webserver
 				file = filename
 				if dir
 					file = dir + File::SEPARATOR + filename
+					file.delete!("\n")
 				end
 
 				if request.match(/stop/)
