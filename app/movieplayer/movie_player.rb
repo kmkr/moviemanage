@@ -8,18 +8,24 @@ class MoviePlayer
 
 	def stop(file_path)
 		if @lastpid
-			puts "Killing #{@lastpid}"
+			puts "Trying to stop #{@lastpid}"
 			begin
 				if RUBY_PLATFORM =~ /linux/
-					filename = `ps ax|grep #{@lastpid}`.split(/\n/).first.match(/vlc\s"([^"]+)/)[1]
-					`ps x|grep "#{filename}"`.split(/\n/).each do |line|
-						pid = line.match(/\A\d+/)[0].to_i
+					match = `cat /proc/#{@lastpid}/cmdline`.match(/"([^"]+)/)
+					unless match
+						puts "No kill - didn't find process"
+						return
+					end
+					filename =	match[1]
+					`ps ax|grep "#{filename}"`.split(/\n/).each do |line|
+						pid = line.match(/\A\s?\d+/)[0].strip.to_i
 						puts "Killing #{pid}"
 						Process.kill("HUP", pid)
 					end
 					`ps x |grep #{@lastpid}`.match(/vlc\s"([^"]+)/)
 				else
 					Process.kill("HUP", @lastpid)
+					puts "Killed #{@lastpid}"
 				end
 			rescue Errno::ESRCH => e
 				puts e

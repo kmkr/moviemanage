@@ -3,28 +3,29 @@
 require_relative '../common/file_finder'
 
 require_relative '../common/ffmpeg_time_at_getter'
+require_relative '../common/mkvmerge_time_at_getter'
 require_relative '../name_generators/simple_name_generator'
 require_relative 'ffmpeg_processor'
+require_relative 'mkvmerge_processor'
 require 'fileutils'
 
 class Splitter
 
-	def initialize(type = "Clip", name_generator = SimpleNameGenerator.new, movie_processor = FfmpegProcessor.new)
+	def initialize(type = "Clip", name_generator = SimpleNameGenerator.new)
 		@type = type
 		@name_generator = name_generator
-		@movie_processor = movie_processor
-		@time_at_getter = FfmpegTimeAtGetter.new
 	end
 
 	def process (current, original)
 		while true
-			start_at, ends_at = @time_at_getter.get_time(@type)
-			if start_at == false
+			times_at = determine_time_at_getter(current).get_time(@type)
+			if times_at == false
 				return
 			end	
 
 			splitted_name = get_target_file_name (current)
-			if start_at < 0	
+			###
+			if 1 == 2
 				just_before, just_after = find_keyframe_alts(current, start_at)
 
 				puts "You requested #{start_at}. Closest keyframes are #{just_before} and #{just_after}"
@@ -34,11 +35,12 @@ class Splitter
 
 				start_at = gets.chomp.to_f
 			end
+			###
 
-			puts "Create #{splitted_name} from #{start_at} to #{ends_at}? [y]/n"
+			puts "Create #{splitted_name}? [y]/n"
 			inp = gets.chomp
 			unless inp == "n"
-				@movie_processor.split(current, start_at, ends_at - start_at, splitted_name)
+				determine_movie_processor(current).split(current, times_at, splitted_name)
 				clip_done = true
 			end
 		end
@@ -90,6 +92,22 @@ class Splitter
 			end
 
 			return [short_starts_on + (just_before or 0), short_starts_on + (just_after or 0)]
+		end
+	end
+
+	def determine_movie_processor(file)
+		if file.match(/\.mkv/)
+			return MkvmergeProcessor.new
+		else
+			return FfmpegProcessor.new
+		end
+	end
+
+	def determine_time_at_getter(file)
+		if file.match(/\.mkv/)
+			return MkvmergeTimeAtGetter.new
+		else
+			return FfmpegTimeAtGetter.new
 		end
 	end
 end

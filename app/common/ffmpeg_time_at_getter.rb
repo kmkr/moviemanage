@@ -13,10 +13,7 @@ class FfmpegTimeAtGetter
 				start_at_seconds = seconds_from_str (start_at)
 				end_at_seconds = seconds_from_str (end_at)
 				if start_at_seconds and end_at_seconds
-					result = [
-						start_at_seconds,
-						end_at_seconds
-					]
+					result = [ { :start_at => start_at_seconds, :ends_at => ends_at_seconds } ]
 				end
 			end
 		end

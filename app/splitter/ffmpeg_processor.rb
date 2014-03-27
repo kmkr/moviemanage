@@ -4,6 +4,7 @@ require 'json'
 
 class FfmpegProcessor
 
+	###
 	def short_file (file, start_at, short_file_name)
 		`ffmpeg -i "#{file}" -vcodec copy -acodec copy -ss #{time_to_str(start_at)} -t #{30} "#{short_file_name}"`
 	end
@@ -15,13 +16,18 @@ class FfmpegProcessor
 		puts "Deleted #{short_file_name}"
 		keyframes
 	end
+	###
 
-	def split (file, start_at, length_in, clip_name)
+	def split (file, times_at, clip_name)
 		folder = clip_name.split(File::SEPARATOR)[0]
 		unless File.directory?(folder)
 			Dir.mkdir folder
 			puts "Created '#{folder}'"
 		end
+
+		# Supports only one times_at
+		start_at = times_at[0][:start_at]
+		length_in = times_[0][:end_at] - start_at
 
 		Console.banner "ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i \"#{file}\" -vcodec copy -acodec copy \"#{clip_name}\" -loglevel warning"
 		`ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i "#{file}" -vcodec copy -acodec copy "#{clip_name}" -loglevel warning`

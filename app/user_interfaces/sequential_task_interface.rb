@@ -54,7 +54,6 @@ class SequentialTaskInterface
   def get_processors (options)
     processors = []
     processors << @scene_splitter_processor if options[:split]
-    processors << @audio_extractor if options[:audio_extract]
     processors << @filename_cleaner_processor if options[:actresses] or options[:categories]
     processors << @actresses_processor if options[:actresses]
     processors << @categories_processor if options[:categories]
@@ -62,6 +61,7 @@ class SequentialTaskInterface
     processors << @indexifier_processor if options[:actresses] or options[:categories]
     processors << @rename_processor if options[:actresses] or options[:categories]
     processors << @tease_processor if options[:tease]
+    processors << @audio_extractor if options[:audio_extract]
     processors << @delete_or_keep_processor
 
     processors
