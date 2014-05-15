@@ -3,7 +3,10 @@ require 'fileutils'
 class MovieNameProcessor
 
 	def process(files)
-		p "What's the name of the movie?"
+		puts "Processing\n#{files.join("\n")}"
+		puts ""
+		puts "What's the name of the movie?"
+
 		movie_name = gets.chomp.downcase.gsub("\s+", ".")
 		files.each_with_index do |file_path, index|
 			file_name = File.basename(file_path)
