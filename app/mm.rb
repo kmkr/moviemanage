@@ -40,7 +40,7 @@ OptionParser.new do |opts|
   opts.on("-s", "--split", "Split large video") do |v|
     options[:split] = v
   end
-  opts.on("-f FILENAME", "--filename FILENAME", "Use file instead of current folder") do |v|
+  opts.on("-f FILEMASK", "--filemask FILEMASK", "Use filemask (regexp) instead of current folder") do |v|
     options[:file] = v
   end
   opts.on("-r ARG", "--remote ARG", "Play file remote. ARG will be interpolated into template in Settings.remote.") do |v|
@@ -62,17 +62,23 @@ end
 
 Settings.load!(config)
 
+files = FileFinder.new.find
+if options[:file]
+  files.delete_if { |file|
+    !file.match(Regexp.new(options[:file]))
+  }
+end 
+
 if options[:movie]
-  MovieNameProcessor.new.process (options[:file] or FileFinder.new.find)
+  MovieNameProcessor.new.process files
 end
 
 if options[:actresses] or options[:categories] or options[:tease] or options[:audio_extract] or options[:split] or options[:repl]
-  
-  files = if options[:file] then [ options[:file] ] else FileFinder.new.find end
+
   if options[:offset]
     puts "Looking for '#{options[:offset]}'"
     puts files.inspect
-    skipto = files.find_index { |file | file.match(/.*#{options[:offset]}.*/) } or 0
+    skipto = files.find_index { |file | File.basename(file).match(/\A#{options[:offset]}.*/) } or 0
     puts "Skipping to #{options[:offset]} (index #{skipto}) files"
     files.shift(skipto)
   end
