@@ -1,8 +1,12 @@
 # encoding: utf-8
 
 require 'json'
+require_relative '../common/seconds_to_time_parser'
 
 class FfmpegProcessor
+	def initialize
+		@seconds_to_time_parser = SecondsToTimeParser.new(true)
+	end
 
 	###
 	def short_file (file, start_at, short_file_name)
@@ -26,31 +30,21 @@ class FfmpegProcessor
 		end
 
 		# Supports only one times_at
-		start_at = times_at[0][:start_at]
-		length_in = times_[0][:end_at] - start_at
+		start_at = @seconds_to_time_parser.parse(times_at[0][:start_at])
+		length_in = @seconds_to_time_parser.parse(times_at[0][:end_at] - times_at[0][:start_at])
 
-		Console.banner "ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i \"#{file}\" -vcodec copy -acodec copy \"#{clip_name}\" -loglevel warning"
-		`ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i "#{file}" -vcodec copy -acodec copy "#{clip_name}" -loglevel warning`
+		command = "ffmpeg -ss #{start_at} -t #{length_in} -i \"#{file}\" -vcodec copy -acodec copy \"#{clip_name}\" -loglevel warning"
+		Console.banner command
+		system(command)
 	end
 
 	def audio_extract (file, start_at, length_in, audio_name)
 		Dir.mkdir("audio") unless File.directory?("audio")
-		Console.banner "ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i \"#{file}\" -acodec libmp3lame -ab 128k \"audio/#{audio_name}\" -loglevel warning"
-		`ffmpeg -ss #{time_to_str(start_at)} -t #{time_to_str(length_in)} -i "#{file}" -acodec libmp3lame -ab 128k "audio/#{audio_name}" -loglevel warning`
+		command = "ffmpeg -ss #{@seconds_to_time_parser.parse(start_at)} -t #{@seconds_to_time_parser.parse(length_in)} -i \"#{file}\" -acodec libmp3lame -ab 128k \"audio/#{audio_name}\" -loglevel warning"
+		Console.banner command
+		system(command)
 	end
 
-	def time_to_str (seconds)
-		ss, ms = (1000*seconds).divmod(1000)
-		mm, ss = ss.divmod(60)            #=> [4515, 21]
-		hh, mm = mm.divmod(60)           #=> [75, 15]
-		dd, hh = hh.divmod(24)           #=> [3, 3]
-		ms = ms.to_i
 
-		hh = hh >= 10 ? hh : "0" + hh.to_s
-		mm = mm >= 10 ? mm : "0" + mm.to_s
-		ss = ss >= 10 ? ss : "0" + ss.to_s
-		ms = ms >= 100 ? ms : (ms >= 10 ? "0" + ms.to_s : "00" + ms.to_s)
-		"#{hh}:#{mm}:#{ss}.#{ms}"
-	end
 
 end

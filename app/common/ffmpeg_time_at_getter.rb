@@ -1,4 +1,10 @@
+require_relative 'seconds_from_string_parser'
+
 class FfmpegTimeAtGetter
+	def initialize
+		@seconds_from_string_parser = SecondsFromStringParser.new
+	end
+
 	def get_time (type = "Extract point")
 		result = nil
 		while result.nil?
@@ -10,10 +16,10 @@ class FfmpegTimeAtGetter
 			if inp.empty?
 				result = false
 			elsif start_at and end_at
-				start_at_seconds = seconds_from_str (start_at)
-				end_at_seconds = seconds_from_str (end_at)
+				start_at_seconds = @seconds_from_string_parser.parse (start_at)
+				end_at_seconds = @seconds_from_string_parser.parse (end_at)
 				if start_at_seconds and end_at_seconds
-					result = [ { :start_at => start_at_seconds, :ends_at => ends_at_seconds } ]
+					result = [ { :start_at => start_at_seconds, :end_at => end_at_seconds } ]
 				end
 			end
 		end
@@ -21,16 +27,4 @@ class FfmpegTimeAtGetter
 		result
 	end
 
-	def seconds_from_str (str)
-		match = str.split(/\D/)
-		if match.size > 0
-			seconds = match.pop
-			minutes = match.pop
-			hours = match.pop
-
-			return seconds.to_i + ((minutes.to_i or 0) * 60) + ((hours.to_i or 0) * 3600)
-		end
-
-		return nil
-	end
 end

@@ -1,8 +1,14 @@
 # encoding: utf-8
 
+require_relative '../common/seconds_to_time_parser'
+
 require 'json'
 
 class MkvmergeProcessor
+
+	def initialize
+		@seconds_to_time_parser = SecondsToTimeParser.new(false)
+	end
 
 	def split (file, times_at, clip_name)
 		folder = clip_name.split(File::SEPARATOR)[0]
@@ -31,7 +37,7 @@ class MkvmergeProcessor
 			if parts.length > 0
 				parts += ","
 			end
-			parts = parts + time_at[:start_at] + "-" + time_at[:end_at]
+			parts = parts + @seconds_to_time_parser.parse(time_at[:start_at]) + "-" + @seconds_to_time_parser.parse(time_at[:end_at])
 		end
 
 		parts
