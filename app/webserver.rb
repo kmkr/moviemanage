@@ -26,6 +26,7 @@ class Webserver
 				wd = URI.unescape(params["wd"].first)
 				dir = nil
 				@mappings.each do |mapping|
+					puts "Matching #{wd} against #{mapping['source']}"
 					if wd.match(Regexp.new(mapping["source"]))
 						puts "Found #{mapping['destination']} to match #{mapping['source']}. Replacing in #{wd}"
 						dir = wd.sub(Regexp.new(mapping["source"]), mapping["destination"])
