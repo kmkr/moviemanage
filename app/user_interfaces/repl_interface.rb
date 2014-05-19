@@ -17,8 +17,8 @@ class ReplInterface
 		@tasks = [
 			{ :description => "Split", :processors => Splitter.new("Scene") },
 			{ :description => "Extract audio", :processors => AudioExtractor.new },
-			{ :description => "Set actress name", :processors => [ FilenameCleanerProcessor.new, ActressesProcessor.new, IndexifierProcessor.new, ExtensionAppender.new, RenameProcessor.new ] },
-			{ :description => "Set categories", :processors => [ FilenameCleanerProcessor.new, CategoriesProcessor.new, IndexifierProcessor.new, ExtensionAppender.new, RenameProcessor.new ] },
+			{ :description => "Set actress name", :processors => [ FilenameCleanerProcessor.new, ActressesProcessor.new, ExtensionAppender.new, IndexifierProcessor.new, RenameProcessor.new ] },
+			{ :description => "Set categories", :processors => [ FilenameCleanerProcessor.new, CategoriesProcessor.new, ExtensionAppender.new, IndexifierProcessor.new, RenameProcessor.new ] },
 			{ :description => "Tease", :processors => Splitter.new("Tease") },
 			{ :description => "Delete", :processors => DeleteOrKeepProcessor.new }
 		]
