@@ -22,7 +22,7 @@ class MkvmergeProcessor
 		# mkvmerge splits file1.mkv into file1_001.mkv and file1_002.mkv
 		# mkvmerge runs again, and file1.mkv is split into the same names and overwrites both files.
 		extension = File.extname(clip_name)
-		clip_name = clip_name.gsub(extension, (0...8).map { (65 + rand(26)).chr }.join + extension)
+		clip_name = clip_name.gsub(extension, "-" + (0...8).map { (65 + rand(26)).chr }.join + extension)
 
 		parts = times_at_to_parts(times_at)
 		# do a export LC_ALL=C in the shell
