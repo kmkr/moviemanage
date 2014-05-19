@@ -15,7 +15,7 @@ class MovieMover
 			return
 		end
 
-		p "Where do you want to move "
+		p "Tease: Where do you want to move "
 		tease_files.each_with_index do |tease_file, index|
 			puts "#{index + 1}) #{tease_file}"
 		end
@@ -47,7 +47,7 @@ class MovieMover
 			return
 		end
 
-		p "Where do you want to move "
+		p "Regular: Where do you want to move "
 		files.each_with_index do |file, index|
 			puts "#{index + 1}) #{file}"
 		end
