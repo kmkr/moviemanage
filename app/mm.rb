@@ -62,7 +62,7 @@ end
 
 Settings.load!(config)
 
-files = FileFinder.new.find
+files = FileFinder.new.find(!!options[:file])
 if options[:file]
   files.delete_if { |file|
     !file.match(Regexp.new(options[:file]))
