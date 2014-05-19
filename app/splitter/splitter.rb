@@ -24,18 +24,6 @@ class Splitter
 			end	
 
 			splitted_name = get_target_file_name (current)
-			###
-			if 1 == 2
-				just_before, just_after = find_keyframe_alts(current, start_at)
-
-				puts "You requested #{start_at}. Closest keyframes are #{just_before} and #{just_after}"
-				puts "1) #{just_before}"
-				puts "2) #{just_after}"
-				puts "Enter requested start_at in seconds"
-
-				start_at = gets.chomp.to_f
-			end
-			###
 
 			puts "Create #{splitted_name}? [y]/n"
 			inp = gets.chomp
@@ -66,33 +54,6 @@ class Splitter
 		}.map { |frame|
 			frame["pkt_pts_time"].to_f
 		}
-	end
-
-	def find_keyframe_alts(file, start_at)
-		keyframes = find_keyframes(file, start_at)
-
-		lastkeyframe = keyframes[0]
-		just_before = nil
-		just_after = nil
-		puts keyframes.size
-		if keyframes.size == 0
-			puts "Found no video keyframes, starting at #{start_at}"
-			# todo: spør om endring av til / fra i tilfelle sample er for kort
-			return [ start_at, start_at ]
-		else
-			short_starts_on = [start_at - 15, 0].max
-			keyframes.sort.each do |keyframe|
-				if short_starts_on + keyframe > start_at
-					if !just_before
-						just_after = keyframe
-						just_before = lastkeyframe
-					end
-				end
-				lastkeyframe = keyframe
-			end
-
-			return [short_starts_on + (just_before or 0), short_starts_on + (just_after or 0)]
-		end
 	end
 
 	def determine_movie_processor(file)
