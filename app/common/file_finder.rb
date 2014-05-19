@@ -2,7 +2,7 @@
 
 class FileFinder
 	def find(keep_processed = false, relative_root = ".")
-		file_paths = Dir.glob("*.{mkv,mp4,avi,mpeg,iso,wmv}", File::FNM_CASEFOLD)
+		file_paths = Dir.glob("#{relative_root}/*.{mkv,mp4,avi,mpeg,iso,wmv}", File::FNM_CASEFOLD)
 
 		keep_processed ? file_paths : remove_processed(file_paths)
 	end
