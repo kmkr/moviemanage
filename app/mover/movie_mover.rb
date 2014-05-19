@@ -1,7 +1,13 @@
 require_relative '../common/file_finder'
+require_relative 'tease_file_finder'
 require 'fileutils'
 
 class MovieMover
+
+	def initialize
+		@tease_file_finder = TeaseFileFinder.new
+		@movie_file_finder = FileFinder.new
+	end
 
 	def move
 		move_tease
@@ -9,7 +15,7 @@ class MovieMover
 	end
 
 	def move_tease
-		tease_files = FileFinder.new.find(true, "tease/")
+		tease_files = @tease_file_finder.find
 		unless tease_files.any?
 			puts "No tease movies found"
 			return
@@ -41,7 +47,7 @@ class MovieMover
 	end
 
 	def move_movie
-		files = FileFinder.new.find(true)
+		files = @movie_file_finder.find(true).concat(@movie_file_finder.find(true, "scene/"))
 		if files.length == 0
 			p "No files to move"
 			return
