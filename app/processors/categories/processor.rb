@@ -12,7 +12,7 @@ class CategoriesProcessor
 		end
 
 		categories_str = @categories_helper.parse(gets.chomp)
-		if categories_str
+		if categories_str.length > 0
 			current + "_" + categories_str
 		else
 			current
