@@ -1,6 +1,4 @@
 # encoding: utf-8
-require 'json'
-
 require_relative 'post_split_processor'
 require_relative '../common/seconds_to_time_parser'
 
@@ -9,20 +7,6 @@ class FfmpegProcessor
 		@seconds_to_time_parser = SecondsToTimeParser.new(true)
 		@post_split_processor = PostSplitProcessor.new
 	end
-
-	###
-	def short_file (file, start_at, short_file_name)
-		`ffmpeg -i "#{file}" -vcodec copy -acodec copy -ss #{time_to_str(start_at)} -t #{30} "#{short_file_name}"`
-	end
-
-	def keyframes (short_file_name)
-		Console.banner "ffprobe -show_frames -print_format json #{short_file_name}"
-		keyframes = JSON.parse(`ffprobe -show_frames -print_format json #{short_file_name}`)["frames"]
-		File.delete(short_file_name)
-		puts "Deleted #{short_file_name}"
-		keyframes
-	end
-	###
 
 	def split (file, times_at, clip_name)
 		folder = clip_name.split(File::SEPARATOR)[0]
