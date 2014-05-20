@@ -1,8 +1,10 @@
 require_relative 'seconds_from_string_parser'
+require_relative 'actress_name_cleaner'
 
 class FfmpegTimeAtGetter
 	def initialize
 		@seconds_from_string_parser = SecondsFromStringParser.new
+		@actress_name_cleaner = ActressNameCleaner.new
 	end
 
 	def get_time (type = "Extract point")
@@ -10,14 +12,19 @@ class FfmpegTimeAtGetter
 		while result.nil?
 			puts "#{type} start at and ends at in format <actress1<_actress2>><_[category]>@>hh:mm:ss hh:mm:ss (blank to finish)"
 			inp = gets.chomp
-			times = inp.split(/\s/)
+			actress_info = nil
+
+			if inp.include?("@")
+				actress_info,times = inp.split("@")
+				puts times
+				actress_info = @actress_name_cleaner.clean(actress_info)
+				puts "AI #{actress_info}"
+			else
+				times = inp
+			end
+			times = times.split(/\s/)
 			start_at = times[0]
 			end_at = times[1]
-			actress_info = nil
-			if start_at.include?("@")
-				actress_info = start_at.split("@")[0]
-				start_at = start_at.split("@")[1]
-			end
 
 			if inp.empty?
 				result = false

@@ -1,8 +1,10 @@
 require_relative 'seconds_from_string_parser'
+require_relative 'actress_name_cleaner'
 
 class MkvmergeTimeAtGetter
 	def initialize
 		@seconds_from_string_parser = SecondsFromStringParser.new
+		@actress_name_cleaner = ActressNameCleaner.new
 	end
 
 	def get_time (type = "Extract point")
@@ -20,7 +22,7 @@ class MkvmergeTimeAtGetter
 
 						actress_info = nil
 						if split.split("@").length > 1
-							actress_info = split.split("@")[0]
+							actress_info = actress_name_cleaner.clean(split.split("@")[0])
 							start_at, end_at = split.split("@")[1].split(/\-/)
 						else
 							start_at, end_at = split.split(/\-/)

@@ -2,7 +2,7 @@
 
 require_relative 'txt_file_helper'
 require_relative 'tease_vid_helper'
-require_relative 'actress_name_cleaner'
+require_relative '../../common/actress_name_cleaner'
 
 class ActressesProcessor
 

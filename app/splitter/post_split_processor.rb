@@ -1,6 +1,8 @@
+require_relative '../common/file_writer'
+
 class PostSplitProcessor
 	def initialize
-		#
+		@file_writer = FileWriter.new
 	end
 
 	def process(times_at, original_clip_name)
@@ -14,11 +16,21 @@ class PostSplitProcessor
 				filename = output[index]
 				if filename
 					extension = File.extname(filename)
-					renamed = output[index].sub(/__.*/, "_" + actress_info) + extension
-					puts "Rename #{filename} to #{renamed} [y]/n?"
-					inp = gets.chomp
-					unless inp == "n"
-						@file_writer.move(filename, renamed)
+					renamed = output[index].sub(/__.*/, "_") + actress_info + extension
+
+					done = false
+
+					until done
+						puts "Rename #{filename} to #{renamed} [y]/n?"
+						inp = gets.chomp
+						if inp == "n"
+							renamed = gets.chomp
+						elsif inp == "skip"
+							done = true
+						else
+							@file_writer.move(filename, renamed)
+							done = true
+						end
 					end
 				else
 					"Found #{actress_info} but output is wrong size! #{output.inspect}"
