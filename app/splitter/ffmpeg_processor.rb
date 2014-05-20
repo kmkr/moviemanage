@@ -33,6 +33,4 @@ class FfmpegProcessor
 		system(command)
 	end
 
-
-
 end
