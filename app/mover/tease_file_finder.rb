@@ -6,6 +6,8 @@ class TeaseFileFinder
 	end
 
 	def find
-		@file_finder.find(false).concat(@file_finder.find(false, "tease"))
+		@file_finder.find(false)
+		.concat(@file_finder.find(false, "tease"))
+		.concat(@file_finder.find(false, "scene"))
 	end
 end
