@@ -1,11 +1,13 @@
 # encoding: utf-8
-
 require 'json'
+
+require_relative 'post_split_processor'
 require_relative '../common/seconds_to_time_parser'
 
 class FfmpegProcessor
 	def initialize
 		@seconds_to_time_parser = SecondsToTimeParser.new(true)
+		@post_split_processor = PostSplitProcessor.new
 	end
 
 	###
@@ -36,6 +38,8 @@ class FfmpegProcessor
 		command = "ffmpeg -ss #{start_at} -t #{length_in} -i \"#{file}\" -vcodec copy -acodec copy \"#{clip_name}\" -loglevel warning"
 		Console.banner command
 		system(command)
+
+		@post_split_processor.process(times_at, clip_name)
 	end
 
 	def audio_extract (file, start_at, length_in, audio_name)

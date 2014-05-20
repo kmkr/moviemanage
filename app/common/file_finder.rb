@@ -10,7 +10,7 @@ class FileFinder
 	private
 	def remove_processed (file_paths)
 		file_paths.reject { |file_path |
-			file_path.include? "]." or file_path.include? "]_(" or file_path.include? "tease/"
+			file_path.include? "]." or file_path.include? "]_("
 		}
 	end
 

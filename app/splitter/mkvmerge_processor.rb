@@ -1,13 +1,15 @@
 # encoding: utf-8
 
+require_relative 'post_split_processor'
 require_relative '../common/seconds_to_time_parser'
-
-require 'json'
+require_relative '../common/file_writer'
 
 class MkvmergeProcessor
 
 	def initialize
 		@seconds_to_time_parser = SecondsToTimeParser.new(false)
+		@file_writer = FileWriter.new
+		@post_split_processor = PostSplitProcessor.new
 	end
 
 	def split (file, times_at, clip_name)
@@ -31,12 +33,13 @@ class MkvmergeProcessor
 		command = "mkvmerge --split parts:#{parts} \"#{file}\" -o \"#{clip_name}\""
 		Console.banner command
 		system(command)
+
+		@post_split_processor.process(times_at, clip_name)
 	end
 
 	def audio_extract (file, start_at, length_in, audio_name)
 	end
 
-	private
 
 	def times_at_to_parts(times_at)
 		parts = ""

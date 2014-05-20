@@ -6,6 +6,6 @@ class TeaseFileFinder
 	end
 
 	def find
-		files = @file_finder.find(false).concat(@file_finder.find(false, "tease/"))
+		@file_finder.find(false).concat(@file_finder.find(false, "tease"))
 	end
 end
