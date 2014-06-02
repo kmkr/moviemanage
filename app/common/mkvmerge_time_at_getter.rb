@@ -22,7 +22,7 @@ class MkvmergeTimeAtGetter
 
 						actress_info = nil
 						if split.split("@").length > 1
-							actress_info = actress_name_cleaner.clean(split.split("@")[0])
+							actress_info = @actress_name_cleaner.clean(split.split("@")[0])
 							start_at, end_at = split.split("@")[1].split(/\-/)
 						else
 							start_at, end_at = split.split(/\-/)
