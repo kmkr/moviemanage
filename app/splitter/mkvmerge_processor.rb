@@ -13,10 +13,12 @@ class MkvmergeProcessor
 	end
 
 	def split (file, times_at, clip_name)
-		folder = clip_name.split(File::SEPARATOR)[0]
-		unless File.directory?(folder)
-			Dir.mkdir folder
-			puts "Created '#{folder}'"
+		if clip_name.include(File::SEPARATOR)
+			folder = clip_name.split(File::SEPARATOR)[0]
+			unless File.directory?(folder)
+				Dir.mkdir folder
+				puts "Created '#{folder}'"
+			end
 		end
 
 		# Since mkvmerge adds indexes after the filename, the indexify process

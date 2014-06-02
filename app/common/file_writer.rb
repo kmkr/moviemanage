@@ -2,7 +2,7 @@ class FileWriter
 	def move(src, dest)
 		write = true
 		if File.exists? dest
-			p "File #{dest} exists! Overwrite? y/[n]"
+			p "File #{dest} (#{File.size(dest) / 1024} kB) exists! Overwrite with #{src} (#{File.size(src) / 1024} kB)? y/[n]"
 			write = gets.chomp == "y"
 		end
 

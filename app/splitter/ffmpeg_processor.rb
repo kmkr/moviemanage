@@ -9,10 +9,12 @@ class FfmpegProcessor
 	end
 
 	def split (file, times_at, clip_name)
-		folder = clip_name.split(File::SEPARATOR)[0]
-		unless File.directory?(folder)
-			Dir.mkdir folder
-			puts "Created '#{folder}'"
+		if clip_name.include?(File::SEPARATOR)
+			folder = clip_name.split(File::SEPARATOR)[0]
+			unless File.directory?(folder)
+				Dir.mkdir folder
+				puts "Created '#{folder}'"
+			end
 		end
 
 		# Supports only one times_at

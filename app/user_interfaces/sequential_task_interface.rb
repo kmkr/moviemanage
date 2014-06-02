@@ -17,13 +17,13 @@ require_relative '../processors/delete_or_keep_processor'
 class SequentialTaskInterface
 
   def initialize(options)
-    @scene_splitter_processor = Splitter.new("Scene")
+    @scene_splitter_processor = Splitter.new(SimpleNameGenerator.new("scene"))
     @audio_extractor = AudioExtractor.new
     @filename_cleaner_processor = FilenameCleanerProcessor.new
     @actresses_processor = ActressesProcessor.new
     @categories_processor = CategoriesProcessor.new
     @rename_processor = RenameProcessor.new
-    @tease_processor = Splitter.new("Tease")
+    @tease_processor = Splitter.new(SimpleNameGenerator.new("tease"))
     @extension_appender = ExtensionAppender.new
     @indexifier_processor = IndexifierProcessor.new
     @delete_or_keep_processor = DeleteOrKeepProcessor.new
