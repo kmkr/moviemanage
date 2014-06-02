@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 
 require_relative '../processors/audio_extractor'
+require_relative '../processors/add_to_no_dl_processor'
 require_relative '../processors/actresses/processor'
 require_relative '../processors/categories/processor'
 require_relative '../processors/rename_processor'
@@ -20,6 +21,7 @@ class ReplInterface
 			{ :description => "Set actress name", :processors => [ FilenameCleanerProcessor.new, ActressesProcessor.new, ExtensionAppender.new, IndexifierProcessor.new, RenameProcessor.new ] },
 			{ :description => "Set categories", :processors => [ FilenameCleanerProcessor.new, CategoriesProcessor.new, ExtensionAppender.new, IndexifierProcessor.new, RenameProcessor.new ] },
 			{ :description => "Tease", :processors => Splitter.new("Tease") },
+			{ :description => "Add to NO DL", :processors => AddToNoDlProcessor.new },
 			{ :description => "Delete", :processors => DeleteOrKeepProcessor.new }
 		]
 	end

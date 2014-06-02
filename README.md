@@ -11,3 +11,9 @@ Example configuration:
       destinations:
         - "/home/my_account/films"
         - "/media/sda/films"
+
+    nodl:
+      location: "/home/folder"
+      reasons:
+        - "quality"
+        - "boring"
