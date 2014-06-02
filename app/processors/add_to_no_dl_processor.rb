@@ -24,10 +24,9 @@ class AddToNoDlProcessor
 			reason = @reasons[inp.to_i-1]
 		end
 
-		extension = File.extname(current)
 		touch = current + "__" + original
 		if reason
-			touch = touch.sub(extension, "_(#{reason})#{extension}")
+			touch = touch + "_(#{reason})"
 		end
 		location = @location + File::SEPARATOR + touch
 		FileUtils.touch(location)
