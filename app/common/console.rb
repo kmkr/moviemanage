@@ -3,7 +3,7 @@ require_relative "processor_exception"
 class Console
 	def self.get_input (output)
 		puts "#{output} - 'del' to delete file, 'skip' to skip file, 'next' to skip processor"
-		input = gets.chomp
+		input = Stdin.gets
 
 		if input == "del"
 			raise ProcessorException.new ("delete")

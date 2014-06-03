@@ -37,7 +37,7 @@ class MovieMover
 		write = true
 		if File.exists? dest
 			p "File #{dest} exists! Overwrite? y/[n]"
-			write = gets.chomp == "y"
+			write = Stdin.gets == "y"
 		end
 
 		if write

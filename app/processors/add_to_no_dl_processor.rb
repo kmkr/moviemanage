@@ -11,20 +11,23 @@ class AddToNoDlProcessor
 	end
 
 	def process (current, original = "")
-		puts "Will touch #{current} in #{@location}, do you want to give a reason?"
+		puts "Reason"
 		@reasons.each_with_index do |reason, index|
 			puts "#{index+1}) #{reason}"
 		end
 		puts ""
 		puts "(enter for no reason)"
 
-		inp = gets.chomp
+		inp = Stdin.gets
 		reason = nil
 		if inp =~ /\d+/
 			reason = @reasons[inp.to_i-1]
 		end
 
-		touch = current + "__" + original
+		touch = current.gsub(File.extname(current), "")
+		if current != original
+			touch += "__" + original.gsub(File.extname(original), "")
+		end
 		if reason
 			touch = touch + "_(#{reason})"
 		end

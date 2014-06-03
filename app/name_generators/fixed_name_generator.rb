@@ -10,7 +10,7 @@ class FixedNameGenerator
 		filename = @fixed_name + extension
 		if File.exists? filename
 			puts "Warning! There is already a file called #{filename}! Continue or indexify c/[i]?"
-			inp = gets.chomp
+			inp = Stdin.gets
 			if inp != "c"
 				return @name_indexifier.indexify_if_exists(filename)
 			end

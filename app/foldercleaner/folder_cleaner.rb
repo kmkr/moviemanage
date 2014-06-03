@@ -18,7 +18,7 @@ class FolderCleaner
 
 	private
 	def consider_del(wipe_files = false)
-		inp = gets.chomp
+		inp = Stdin.gets
 		folder = Dir.pwd
 		if inp == "y" or inp == ""
 			if wipe_files

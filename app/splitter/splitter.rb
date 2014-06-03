@@ -26,7 +26,7 @@ class Splitter
 			splitted_name = @name_generator.generate (current)
 
 			puts "Create #{splitted_name}? [y]/n"
-			inp = gets.chomp
+			inp = Stdin.gets
 			unless inp == "n"
 				determine_movie_processor(current).split(current, times_at, splitted_name)
 			end

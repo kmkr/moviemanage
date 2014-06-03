@@ -13,7 +13,7 @@ require_relative '../processors/cut_processor'
 require_relative '../processors/extension_appender'
 require_relative '../processors/indexifier_processor'
 require_relative '../processors/delete_or_keep_processor'
-
+require_relative '../stdin/stdin'
 
 class SequentialTaskInterface
 

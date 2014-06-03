@@ -13,6 +13,7 @@ require_relative '../processors/indexifier_processor'
 require_relative '../processors/cut_processor'
 require_relative '../common/processor_exception'
 require_relative '../common/processor_exception_handler'
+require_relative '../stdin/stdin'
 
 class ReplInterface
 	def initialize
@@ -67,7 +68,7 @@ class ReplInterface
 	def get_index(max)
 		skip = false
 		until skip
-			inp = gets.chomp
+			inp = Stdin.gets
 			if inp == "n"
 				skip = true
 				next

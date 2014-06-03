@@ -3,7 +3,7 @@ class FileWriter
 		write = true
 		if File.exists? dest
 			p "File #{dest} (#{File.size(dest) / 1024} kB) exists! Overwrite with #{src} (#{File.size(src) / 1024} kB)? y/[n]"
-			write = gets.chomp == "y"
+			write = Stdin.gets == "y"
 		end
 
 		if write

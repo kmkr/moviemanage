@@ -11,7 +11,7 @@ class FfmpegTimeAtGetter
 		result = nil
 		while result.nil?
 			puts "#{type} start at and ends at in format <actress1<_actress2>><_[category]>@>hh:mm:ss hh:mm:ss (blank to finish)"
-			inp = gets.chomp
+			inp = Stdin.gets
 			actress_info = nil
 
 			if inp.include?("@")

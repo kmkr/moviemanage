@@ -20,7 +20,7 @@ class AudioExtractor
 			if !start_at
 				done_with_file = true
 				puts "Do you want to keep #{current}? [y]/n"
-				inp = gets.chomp
+				inp = Stdin.gets
 				if inp == "n"
 					File.delete current
 					puts "Deleted #{current}"

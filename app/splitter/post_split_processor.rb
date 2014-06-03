@@ -22,9 +22,9 @@ class PostSplitProcessor
 
 					until done
 						puts "Rename #{filename} to #{renamed} [y]/n?"
-						inp = gets.chomp
+						inp = Stdin.gets
 						if inp == "n"
-							renamed = gets.chomp
+							renamed = Stdin.gets
 						elsif inp == "skip"
 							done = true
 						else
