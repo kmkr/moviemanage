@@ -9,6 +9,7 @@ require_relative '../processors/actresses/processor'
 require_relative '../processors/categories/processor'
 require_relative '../processors/rename_processor'
 require_relative '../splitter/splitter'
+require_relative '../processors/cut_processor'
 require_relative '../processors/extension_appender'
 require_relative '../processors/indexifier_processor'
 require_relative '../processors/delete_or_keep_processor'
@@ -24,6 +25,7 @@ class SequentialTaskInterface
     @categories_processor = CategoriesProcessor.new
     @rename_processor = RenameProcessor.new
     @tease_processor = Splitter.new(SimpleNameGenerator.new("tease"))
+    @cut_processor = CutProcessor.new
     @extension_appender = ExtensionAppender.new
     @indexifier_processor = IndexifierProcessor.new
     @delete_or_keep_processor = DeleteOrKeepProcessor.new
@@ -60,6 +62,7 @@ class SequentialTaskInterface
     processors << @extension_appender if options[:actresses] or options[:categories]
     processors << @indexifier_processor if options[:actresses] or options[:categories]
     processors << @rename_processor if options[:actresses] or options[:categories]
+    processors << @cut_processor if options[:cut]
     processors << @tease_processor if options[:tease]
     processors << @audio_extractor if options[:audio_extract]
     processors << @delete_or_keep_processor

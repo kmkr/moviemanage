@@ -46,6 +46,12 @@ OptionParser.new do |opts|
   opts.on("-r ARG", "--remote ARG", "Play file remote. ARG will be interpolated into template in Settings.remote.") do |v|
     options[:remote] = v
   end
+  opts.on("--cut", "Cut video (inplace edit)") do |v|
+    options[:cut] = v
+  end
+  opts.on("-r ARG", "--remote ARG", "Play file remote. ARG will be interpolated into template in Settings.remote.") do |v|
+    options[:remote] = v
+  end
   opts.on("-o CONFIG", "--config CONFIG", "Use custom config file instead of config.yml. Will override ENV['MM_CLIENT_CONFIG']") do |v|
     options[:config] = v
   end
