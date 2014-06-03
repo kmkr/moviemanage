@@ -11,7 +11,7 @@ class MkvmergeTimeAtGetter
 		result = nil
 		while result.nil?
 			puts "#{type} starts at and ends at in format <actress1<_actress2>><_[category]>@>00:01:20-00:02:45,00:05:50-00:10:30 (blank to finish)"
-			inp = Stdin.gets
+			inp = Stdin.gets(true)
 			if inp.empty?
 				result = false
 			else

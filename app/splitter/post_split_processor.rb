@@ -23,11 +23,9 @@ class PostSplitProcessor
 					until done
 						puts "Rename #{filename} to #{renamed} [y]/n?"
 						inp = Stdin.gets
-						if inp == "n"
-							renamed = Stdin.gets
-						elsif inp == "skip"
+						if inp == "skip"
 							done = true
-						else
+						elsif inp != "n"
 							@file_writer.move(filename, renamed)
 							done = true
 						end
