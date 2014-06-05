@@ -21,7 +21,9 @@ class PostSplitProcessor
 					done = false
 
 					until done
-						puts "Rename #{filename} to #{renamed} [y]/n?"
+						puts "From: #{filename}"
+						puts "To  : #{renamed}"
+						puts "Rename? [y]/n?"
 						inp = Stdin.gets
 						if inp == "skip"
 							done = true

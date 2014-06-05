@@ -1,7 +1,7 @@
 require_relative "processor_exception"
 
 class Console
-	def self.get_input (output)
+	def self.get_with_options (output)
 		puts "#{output} - 'del' to delete file, 'skip' to skip file, 'next' to skip processor"
 		input = Stdin.gets
 

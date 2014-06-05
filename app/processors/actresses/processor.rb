@@ -19,7 +19,7 @@ class ActressesProcessor
 
 		actresses = ""
 		while actresses.length == 0
-			actresses = @name_cleaner.clean Console.get_input("Actresses (separate by underscore)")
+			actresses = @name_cleaner.clean Console.get_with_options("Actresses (separate by underscore)")
 		end
 
 		if actresses
