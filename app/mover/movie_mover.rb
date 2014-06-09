@@ -1,4 +1,5 @@
 require_relative '../common/file_finder'
+require_relative '../common/file_writer'
 require_relative 'tease_file_finder'
 require 'fileutils'
 
@@ -7,6 +8,7 @@ class MovieMover
 	def initialize
 		@tease_file_finder = TeaseFileFinder.new
 		@movie_file_finder = FileFinder.new
+		@file_writer = FileWriter.new
 	end
 
 	def move
@@ -28,23 +30,11 @@ class MovieMover
 		destination = list_and_choose Dir["#{Settings.mover["tease_location"]}/*"]
 
 		tease_files.each do |file|
-			_move file, "#{destination}/#{File.basename(file)}"
+			@file_writer.move(file, "#{destination}/#{File.basename(file)}")
 		end
 	end
 
 	private
-	def _move(src, dest)
-		write = true
-		if File.exists? dest
-			p "File #{dest} exists! Overwrite? y/[n]"
-			write = Stdin.gets == "y"
-		end
-
-		if write
-			p "Moving #{src} to #{dest}"
-			FileUtils.mv src, "#{dest}"
-		end
-	end
 
 	def move_movie
 		files = @movie_file_finder.find(true).concat(@movie_file_finder.find(true, "scene/"))
@@ -61,7 +51,7 @@ class MovieMover
 		folder = list_and_choose Dir["#{root}/*"]
 
 		files.each do |file|
-			_move file, "#{folder}/#{File.basename(file)}"
+			@file_writer.move(file, "#{folder}/#{File.basename(file)}")
 		end
 	end
 
