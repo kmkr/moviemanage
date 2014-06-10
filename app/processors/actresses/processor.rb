@@ -1,21 +1,18 @@
 # encoding: utf-8
 
-require_relative 'txt_file_helper'
-require_relative 'tease_vid_helper'
+require_relative 'existing_videos'
 require_relative '../../common/actress_name_cleaner'
 
 class ActressesProcessor
 
 	def initialize
-		@txt_file_helper = TxtFileHelper.new
-		@tease_vid_helper = TeaseVidHelper.new
+		@existing_videos = ExistingVideos.new
 		@name_cleaner = ActressNameCleaner.new
 	end
 	
 	def process (current, original = "")
 		
-		@txt_file_helper.find_and_print(current)
-		@tease_vid_helper.find_and_print(current)
+		@existing_videos.find_and_print(current)
 
 		actresses = ""
 		while actresses.length == 0
