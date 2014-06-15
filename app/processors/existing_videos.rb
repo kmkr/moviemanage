@@ -4,9 +4,10 @@ require 'find'
 class ExistingVideos
 
 	def initialize
-		@locations = [ Settings.mover["tease_location"] ]
-		@locations.concat(Settings.mover["destinations"])
-
+		@locations = Settings.scanner["locations"]
+		@locations << Settings.mover["tease_location"] if Settings.scanner["tease"]
+		@locations << Settings.nodl["location"] if Settings.scanner["nodl"]
+		@locations.concat(Settings.mover["destinations"]) if Settings.scanner["mover"]
 	end
 
 	def find_and_print (argument)
@@ -32,9 +33,9 @@ class ExistingVideos
 		if results.length > 0
 			puts "Found vids:"
 			results.sort_by{ |result|
-				result[:file]
+				result[:folder] + "/" + result[:file]
 				}.each do |result|
-				puts "#{result[:file]} (#{result[:folder]})"
+				puts "#{result[:folder]}\t#{result[:file]}"
 			end
 		end
 	end
