@@ -11,6 +11,7 @@ require_relative 'foldercleaner/folder_cleaner'
 require_relative 'common/settings'
 require_relative 'processors/start_movie_processor'
 require_relative 'processors/end_movie_processor'
+require_relative 'processors/existing_videos'
 
 options = {}
 OptionParser.new do |opts|
@@ -58,6 +59,9 @@ OptionParser.new do |opts|
   opts.on("-u", "--repl", "Use REPL-ui") do |v|
     options[:repl] = v
   end
+  opts.on("--scan PATTERN", "Scan for existing videos using pattern") do |v|
+    options[:scan] = v
+  end
 end.parse!
 
 config = options[:config]
@@ -77,6 +81,10 @@ end
 
 if options[:movie]
   MovieNameProcessor.new.process files
+end
+
+if options[:scan]
+  ExistingVideos.new.find_and_print options[:scan]
 end
 
 if options[:actresses] or options[:categories] or options[:tease] or options[:audio_extract] or options[:split] or options[:repl]

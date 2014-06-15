@@ -1,4 +1,4 @@
-require_relative '../../common/filename_cleaner'
+
 require 'find'
 
 class ExistingVideos
@@ -6,17 +6,23 @@ class ExistingVideos
 	def initialize
 		@locations = [ Settings.mover["tease_location"] ]
 		@locations.concat(Settings.mover["destinations"])
-		@cleaner = FilenameCleaner.new
+
 	end
 
-	def find_and_print (file_path)
-		tease_file_name = @cleaner.find_tease_name(file_path)
+	def find_and_print (argument)
+		puts "Looking for #{argument}"
 
 		results = []
 		@locations.each do |location|
 			begin
 				Find.find(location) do |path|
-					results << path if path =~ /.*#{tease_file_name}.*/
+					if path =~ /.*#{argument}.*/
+						tree = path.split(File::SEPARATOR)
+						results << {
+							:folder => "#{tree[-3]}/#{tree[-2]}",
+							:file => tree[-1]
+						} 
+					end
 				end
 			rescue Errno::ENOENT => e
 				puts "Error while scanning #{location}: #{e}"
@@ -25,8 +31,10 @@ class ExistingVideos
 
 		if results.length > 0
 			puts "Found vids:"
-			results.sort.each do |result|
-				puts @cleaner.file_only(result)
+			results.sort_by{ |result|
+				result[:file]
+				}.each do |result|
+				puts "#{result[:file]} (#{result[:folder]})"
 			end
 		end
 	end
