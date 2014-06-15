@@ -7,13 +7,25 @@ Example configuration:
       - "[a]ction"
       - "d[r]ama"
 
+    nodl:
+      location: /media/sdb/nodl
+      reasons:
+        - quality
+
     mover:
       destinations:
         - "/home/my_account/films"
         - "/media/sda/films"
+      tease_location: "/media/sde/trailers"
 
-    nodl:
-      location: "/home/folder"
-      reasons:
-        - "quality"
-        - "boring"
+    scanner:
+      tease: true
+      nodl: true
+      mover: true
+      locations:
+        - /media/sda/unsorted
+
+    actresses:
+      tease_location: "/media/sde/trailers"
+
+    remote: http://192.168.1.{{num}}:2000
