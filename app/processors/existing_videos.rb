@@ -20,7 +20,8 @@ class ExistingVideos
 					if path.downcase =~ /.*#{argument}.*/
 						tree = path.split(File::SEPARATOR)
 						results << {
-							:folder => "#{tree[-3]}/#{tree[-2]}",
+							:parent => tree[-3],
+							:folder => tree[-2],
 							:file => tree[-1]
 						} 
 					end
@@ -33,9 +34,10 @@ class ExistingVideos
 		if results.length > 0
 			puts "Found vids:"
 			results.sort_by{ |result|
-				result[:folder] + "/" + result[:file]
+				result[:parent] + "/" + result[:folder] + "/" + result[:file]
 				}.each do |result|
-				puts "#{result[:folder]}\t#{result[:file]}"
+				#puts "#{result[:folder]}\t#{result[:file]}"
+				printf "%-20s %-30s %s\n", result[:parent], result[:folder], result[:file]
 			end
 		end
 	end
