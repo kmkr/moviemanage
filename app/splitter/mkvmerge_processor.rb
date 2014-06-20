@@ -13,7 +13,7 @@ class MkvmergeProcessor
 	end
 
 	def split (file, times_at, clip_name)
-		if clip_name.include(File::SEPARATOR)
+		if clip_name.include?(File::SEPARATOR)
 			folder = clip_name.split(File::SEPARATOR)[0]
 			unless File.directory?(folder)
 				Dir.mkdir folder
