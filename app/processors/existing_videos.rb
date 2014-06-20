@@ -36,7 +36,6 @@ class ExistingVideos
 			results.sort_by{ |result|
 				result[:parent] + "/" + result[:folder] + "/" + result[:file]
 				}.each do |result|
-				#puts "#{result[:folder]}\t#{result[:file]}"
 				printf "%-20s %-30s %s\n", result[:parent], result[:folder], result[:file]
 			end
 		end
