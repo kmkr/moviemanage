@@ -7,7 +7,7 @@ class PostSplitProcessor
 
 	def process(times_at, original_clip_name)
 		without_extension = original_clip_name.sub(File.extname(original_clip_name), "")
-		output = Dir.glob(without_extension + "*")
+		output = Dir.glob(without_extension + "*").sort
 
 		times_at.each_with_index do |time_at, index|
 			actress_info = time_at[:actress_info]
