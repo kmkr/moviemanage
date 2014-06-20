@@ -17,7 +17,7 @@ class ExistingVideos
 		@locations.each do |location|
 			begin
 				Find.find(location) do |path|
-					if path =~ /.*#{argument}.*/
+					if path.downcase =~ /.*#{argument}.*/
 						tree = path.split(File::SEPARATOR)
 						results << {
 							:folder => "#{tree[-3]}/#{tree[-2]}",
