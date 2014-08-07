@@ -8,6 +8,7 @@ class ExistingVideos
 		@locations << Settings.mover["tease_location"] if Settings.scanner["tease"]
 		@locations << Settings.nodl["location"] if Settings.scanner["nodl"]
 		@locations.concat(Settings.mover["destinations"]) if Settings.scanner["mover"]
+		@locations.uniq!
 	end
 
 	def find_and_print (argument)
