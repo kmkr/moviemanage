@@ -1,8 +1,10 @@
 require_relative '../common/file_writer'
+require_relative '../common/name_indexifier'
 
 class PostSplitProcessor
 	def initialize
 		@file_writer = FileWriter.new
+		@name_indexifier = NameIndexifier.new
 	end
 
 	def process(times_at, original_clip_name)
@@ -16,7 +18,7 @@ class PostSplitProcessor
 				filename = output[index]
 				if filename
 					extension = File.extname(filename)
-					renamed = output[index].sub(/__.*/, "_") + actress_info + extension
+					renamed = @name_indexifier.indexify_if_exists(output[index].sub(/__.*/, "").sub(extension, "") + actress_info + extension)
 
 					done = false
 
