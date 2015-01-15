@@ -23,8 +23,8 @@ OptionParser.new do |opts|
   opts.on("-m", "--move", "Move files at the end") do |v|
     options[:move] = v
   end
-  opts.on("-a", "--actresses", "Set actresses names") do |v|
-    options[:actresses] = v
+  opts.on("-a", "--performers", "Set performers names") do |v|
+    options[:performers] = v
   end
   opts.on("-c", "--categories", "Add categories") do |v|
     options[:categories] = v
@@ -87,7 +87,7 @@ if options[:scan]
   ExistingVideos.new.find_and_print options[:scan]
 end
 
-if options[:actresses] or options[:categories] or options[:tease] or options[:audio_extract] or options[:split] or options[:repl]
+if options[:performers] or options[:categories] or options[:tease] or options[:audio_extract] or options[:split] or options[:repl]
 
   if options[:offset]
     puts "Looking for '#{options[:offset]}'"

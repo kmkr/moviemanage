@@ -1,10 +1,10 @@
 require "test/unit"
-require_relative "../../app/actresses/actress_name_cleaner"
+require_relative "../../app/performers/performer_name_cleaner"
  
-class TestActressNameCleaner < Test::Unit::TestCase
+class TestPerformerNameCleaner < Test::Unit::TestCase
 
   def setup
-    @acn = ActressNameCleaner.new
+    @acn = PerformerNameCleaner.new
   end
  
   def test_strip_leading_space

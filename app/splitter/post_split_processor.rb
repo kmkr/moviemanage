@@ -12,13 +12,13 @@ class PostSplitProcessor
 		output = Dir.glob(without_extension + "*").sort
 
 		times_at.each_with_index do |time_at, index|
-			actress_info = time_at[:actress_info]
-			if actress_info
-				puts "Found actress info for part #{index})"
+			performer_info = time_at[:performer_info]
+			if performer_info
+				puts "Found performer info for part #{index})"
 				filename = output[index]
 				if filename
 					extension = File.extname(filename)
-					renamed = @name_indexifier.indexify_if_exists(output[index].sub(/__.*/, "").sub(extension, "") + "_" + actress_info + extension)
+					renamed = @name_indexifier.indexify_if_exists(output[index].sub(/__.*/, "").sub(extension, "") + "_" + performer_info + extension)
 
 					done = false
 
@@ -35,10 +35,10 @@ class PostSplitProcessor
 						end
 					end
 				else
-					"Found #{actress_info} but output is wrong size! #{output.inspect}"
+					"Found #{performer_info} but output is wrong size! #{output.inspect}"
 				end
 			else
-				puts "Did not find actress_info"
+				puts "Did not find performer_info"
 			end
 		end
 	end

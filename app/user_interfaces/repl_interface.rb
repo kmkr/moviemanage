@@ -2,7 +2,7 @@
 
 require_relative '../processors/audio_extractor'
 require_relative '../processors/add_to_no_dl_processor'
-require_relative '../processors/actresses/processor'
+require_relative '../processors/performers/processor'
 require_relative '../processors/categories/processor'
 require_relative '../processors/rename_processor'
 require_relative '../processors/filename_cleaner_processor'
@@ -21,7 +21,7 @@ class ReplInterface
 		@tasks = [
 			{ :description => "Split", :processors => Splitter.new(SimpleNameGenerator.new("scene")) },
 			{ :description => "Extract audio", :processors => AudioExtractor.new },
-			{ :description => "Set actress name", :processors => [ FilenameCleanerProcessor.new, ExistingVideosProcessor.new, ActressesProcessor.new, ExtensionAppender.new, IndexifierProcessor.new, RenameProcessor.new ] },
+			{ :description => "Set performer name", :processors => [ FilenameCleanerProcessor.new, ExistingVideosProcessor.new, PerformersProcessor.new, ExtensionAppender.new, IndexifierProcessor.new, RenameProcessor.new ] },
 			{ :description => "Set categories", :processors => [ FilenameCleanerProcessor.new, CategoriesProcessor.new, ExtensionAppender.new, IndexifierProcessor.new, RenameProcessor.new ] },
 			{ :description => "Tease", :processors => Splitter.new(SimpleNameGenerator.new("tease")) },
 			{ :description => "Delete", :processors => DeleteOrKeepProcessor.new },

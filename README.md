@@ -25,7 +25,7 @@ Example configuration:
       locations:
         - /media/sda/unsorted
 
-    actresses:
+    performers:
       tease_location: "/media/sde/trailers"
 
     remote: http://192.168.1.{{num}}:2000
