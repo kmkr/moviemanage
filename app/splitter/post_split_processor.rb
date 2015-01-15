@@ -18,7 +18,7 @@ class PostSplitProcessor
 				filename = output[index]
 				if filename
 					extension = File.extname(filename)
-					renamed = @name_indexifier.indexify_if_exists(output[index].sub(/__.*/, "").sub(extension, "") + actress_info + extension)
+					renamed = @name_indexifier.indexify_if_exists(output[index].sub(/__.*/, "").sub(extension, "") + "_" + actress_info + extension)
 
 					done = false
 

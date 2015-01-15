@@ -112,6 +112,7 @@ if options[:actresses] or options[:categories] or options[:tease] or options[:au
 end
 
 if options[:move]
-  MovieMover.new.move  
+  # todo: support for moving only "files"
+  MovieMover.new.move
   FolderCleaner.new.consider_clean
 end
