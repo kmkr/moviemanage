@@ -7,7 +7,7 @@ class FfmpegProcessor
 	def initialize
 		@seconds_to_time_parser = SecondsToTimeParser.new(true)
 		@post_split_processor = PostSplitProcessor.new
-		@ffmpeg = Settings.processors.ffmpeg.path
+		@ffmpeg = Settings.processors['ffmpeg']['path']
 	end
 
 	def split (file, times_at, clip_name)
@@ -35,18 +35,6 @@ class FfmpegProcessor
 		command = "#{@ffmpeg} -ss #{@seconds_to_time_parser.parse(start_at)} -t #{@seconds_to_time_parser.parse(length_in)} -i \"#{file}\" -acodec libmp3lame -ab 128k \"audio/#{audio_name}\" -loglevel warning"
 		Console.banner command
 		system(command)
-	end
-
-	private
-	def which(cmd)
-  		exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
-  		ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
-    			exts.each { |ext|
-      				exe = File.join(path, "#{cmd}#{ext}")
-	      			return exe if File.executable?(exe) && !File.directory?(exe)
-    			}
-  		end
-  		return nil
 	end
 
 end
