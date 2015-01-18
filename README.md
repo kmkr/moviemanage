@@ -29,3 +29,7 @@ Example configuration:
       tease_location: "/media/sde/trailers"
 
     remote: http://192.168.1.{{num}}:2000
+
+    processors:
+      ffmpeg:
+        path: ffmpeg
