@@ -30,7 +30,9 @@ class Webserver
 					if wd.match(Regexp.new(mapping["source"]))
 						puts "Found #{mapping['destination']} to match #{mapping['source']}. Replacing in #{wd}"
 						dir = wd.sub(Regexp.new(mapping["source"]), mapping["destination"])
-						dir.gsub!(/[\\\/]/, File::SEPARATOR)
+						sep = File::SEPARATOR
+                                                sep = Settings.separator if Settings.separator
+                                                dir.gsub!(/[\\\/]/, sep)
 						puts dir
 						break
 					end
