@@ -23,7 +23,7 @@ class FfmpegProcessor
 		start_at = @seconds_to_time_parser.parse(times_at[0][:start_at])
 		length_in = @seconds_to_time_parser.parse(times_at[0][:end_at] - times_at[0][:start_at])
 
-		command = "#{@ffmpeg} -ss #{start_at} -t #{length_in} -i \"#{file}\" -vcodec copy -acodec copy \"#{clip_name}\" -loglevel warning"
+		command = "#{@ffmpeg} -ss #{start_at} -i \"#{file}\" -t #{length_in} -vcodec copy -acodec copy \"#{clip_name}\" -loglevel warning"
 		Console.banner command
 		system(command)
 
