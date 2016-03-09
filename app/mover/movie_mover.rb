@@ -55,9 +55,10 @@ class MovieMover
 		end
 	end
 
-	def list_and_choose (selections, filter)
+	def list_and_choose (selections, filter = "")
 		if filter.size > 0
-			matches = selections.collect { |x| x.match(filter) }
+			matches = selections.select { |x| x.match(filter) }
+            puts "Matched #{matches}"
 			return matches[0] if matches.length == 1
 		end
 
