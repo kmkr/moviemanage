@@ -20,7 +20,7 @@ OptionParser.new do |opts|
   opts.on("-n", "--name", "Set movie name") do |v|
     options[:movie] = v
   end
-  opts.on("-m", "--move", "Move files at the end") do |v|
+  opts.on("-m [ARG]", "--move [ARG]", "Move files. Optional filter for where to move.") do |v|
     options[:move] = v
   end
   opts.on("-a", "--performers", "Set performers names") do |v|
@@ -113,6 +113,6 @@ end
 
 if options[:move]
   # todo: support for moving only "files"
-  MovieMover.new.move
+  MovieMover.new.move(options[:move])
   FolderCleaner.new.consider_clean
 end
