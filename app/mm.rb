@@ -17,8 +17,12 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: mm.rb [options]"
 
-  opts.on("-n", "--name", "Set movie name") do |v|
-    options[:movie] = v
+  opts.on("-n", "--name [ARG]", "Set movie name") do |v|
+    if v
+      options[:movie] = v
+    else
+      options[:movie] = ""
+    end
   end
   opts.on("-m [ARG]", "--move [ARG]", "Move files. Optional filter for where to move.") do |v|
     if v
@@ -84,7 +88,7 @@ if options[:file]
 end 
 
 if options[:movie]
-  MovieNameProcessor.new.process files
+  MovieNameProcessor.new.process(files, options[:movie])
 end
 
 if options[:scan]
