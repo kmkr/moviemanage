@@ -21,7 +21,11 @@ OptionParser.new do |opts|
     options[:movie] = v
   end
   opts.on("-m [ARG]", "--move [ARG]", "Move files. Optional filter for where to move.") do |v|
-    options[:move] = v
+    if v
+      options[:move] = v
+    else
+      options[:move] = ""
+    end
   end
   opts.on("-a", "--performers", "Set performers names") do |v|
     options[:performers] = v
