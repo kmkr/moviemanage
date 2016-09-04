@@ -12,6 +12,7 @@ require_relative '../processors/delete_or_keep_processor'
 require_relative '../processors/indexifier_processor'
 require_relative '../processors/cut_processor'
 require_relative '../processors/existing_videos_processor'
+require_relative '../processors/move_current_file_processor'
 require_relative '../common/processor_exception'
 require_relative '../common/processor_exception_handler'
 require_relative '../stdin/stdin'
@@ -27,7 +28,8 @@ class ReplInterface
 			{ :description => "Delete", :processors => DeleteOrKeepProcessor.new },
 			{ :description => "Cut (use single part of movie)", :processors => CutProcessor.new },
 			{ :description => "Add to NO DL", :processors => AddToNoDlProcessor.new },
-			{ :description => "Scan existing videos", :processors => ExistingVideosProcessor.new }
+			{ :description => "Scan existing videos", :processors => ExistingVideosProcessor.new },
+			{ :description => "Move current file", :processors => MoveCurrentFileProcessor.new }
 		]
 	end
 

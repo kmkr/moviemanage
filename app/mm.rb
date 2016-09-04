@@ -80,7 +80,7 @@ end
 
 Settings.load!(config)
 
-files = FileFinder.new.find(true, !!options[:file])
+files = FileFinder.new.find(!!options[:file])
 if options[:file]
   files.delete_if { |file|
     !file.match(Regexp.new(options[:file]))
@@ -121,6 +121,6 @@ end
 
 if options[:move]
   # todo: support for moving only "files"
-  MovieMover.new.move(options[:move])
+  MovieMover.new.auto_move(options[:move])
   FolderCleaner.new.consider_clean
 end

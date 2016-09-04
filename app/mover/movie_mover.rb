@@ -11,9 +11,14 @@ class MovieMover
 		@file_writer = FileWriter.new
 	end
 
-	def move(destination_filter = nil)
+	def auto_move(destination_filter = "")
 		move_tease(destination_filter)
-		move_movie(destination_filter)
+		regular_files = @movie_file_finder.find(true).concat(@movie_file_finder.find(true, "scene/"))
+		move(files, destination_filter)
+	end
+
+	def move(files, destination_filter = "")
+		move_movie(files, destination_filter)
 	end
 
 	private
@@ -35,8 +40,7 @@ class MovieMover
 		end
 	end
 
-	def move_movie(destination_filter)
-		files = @movie_file_finder.find(true).concat(@movie_file_finder.find(true, "scene/"))
+	def move_movie(files, destination_filter)
 		if files.length == 0
 			p "No files to move"
 			return
