@@ -16,6 +16,7 @@ class MovieMover
 		move_movie(destination_filter)
 	end
 
+	private
 	def move_tease(destination_filter)
 		tease_files = @tease_file_finder.find
 		unless tease_files.any?
@@ -33,8 +34,6 @@ class MovieMover
 			@file_writer.move(file, "#{destination}/#{File.basename(file)}")
 		end
 	end
-
-	private
 
 	def move_movie(destination_filter)
 		files = @movie_file_finder.find(true).concat(@movie_file_finder.find(true, "scene/"))
