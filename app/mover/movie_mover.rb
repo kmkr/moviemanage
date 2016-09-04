@@ -11,12 +11,12 @@ class MovieMover
 		@file_writer = FileWriter.new
 	end
 
-	def move(filter = nil)
-		move_tease(filter)
-		move_movie(filter)
+	def move(destination_filter = nil)
+		move_tease(destination_filter)
+		move_movie(destination_filter)
 	end
 
-	def move_tease(filter)
+	def move_tease(destination_filter)
 		tease_files = @tease_file_finder.find
 		unless tease_files.any?
 			puts "No tease movies found"
@@ -27,7 +27,7 @@ class MovieMover
 		tease_files.each_with_index do |tease_file, index|
 			puts "#{index + 1}) #{tease_file}"
 		end
-		destination = list_and_choose(Dir["#{Settings.mover["tease_location"]}/*"], filter)
+		destination = list_and_choose(Dir["#{Settings.mover["tease_location"]}/*"], destination_filter)
 
 		tease_files.each do |file|
 			@file_writer.move(file, "#{destination}/#{File.basename(file)}")
@@ -36,7 +36,7 @@ class MovieMover
 
 	private
 
-	def move_movie(filter)
+	def move_movie(destination_filter)
 		files = @movie_file_finder.find(true).concat(@movie_file_finder.find(true, "scene/"))
 		if files.length == 0
 			p "No files to move"
@@ -48,16 +48,16 @@ class MovieMover
 			puts "#{index + 1}) #{file}"
 		end
 		root = list_and_choose Settings.mover["destinations"]
-		folder = list_and_choose(Dir["#{root}/*"], filter)
+		folder = list_and_choose(Dir["#{root}/*"], destination_filter)
 
 		files.each do |file|
 			@file_writer.move(file, "#{folder}/#{File.basename(file)}")
 		end
 	end
 
-	def list_and_choose (selections, filter = "")
-		if filter.size > 0
-			matches = selections.select { |x| x.match(filter) }
+	def list_and_choose (selections, destination_filter = "")
+		if destination_filter.size > 0
+			matches = selections.select { |x| x.match(destination_filter) }
             puts "Matched #{matches}"
 			return matches[0] if matches.length == 1
 		end
