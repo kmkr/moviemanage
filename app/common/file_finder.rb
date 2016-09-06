@@ -2,7 +2,6 @@
 
 class FileFinder
 	def find(keep_processed = false, relative_root = ".")
-            p keep_processed
 		file_paths = Dir.glob("#{relative_root}/*.{mkv,mp4,avi,mpeg,iso,wmv}", File::FNM_CASEFOLD).sort
 
 		keep_processed ? file_paths : remove_processed(file_paths)
