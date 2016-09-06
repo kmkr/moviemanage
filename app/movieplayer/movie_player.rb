@@ -1,7 +1,13 @@
+require_relative '../common/settings'
+
 class MoviePlayer
 
+    def initialize(player)
+        @player = player
+    end
+
 	def play(file_path)
-		@lastpid = spawn("vlc \"#{file_path}\"")
+		@lastpid = spawn("#{@player} \"#{file_path}\"")
 		puts "Started #{file_path} with pid #{@lastpid}"
 		Process.detach(@lastpid)
 	end

@@ -10,8 +10,8 @@ class Webserver
 
 	def initialize(settings_file)
 		@webserver = TCPServer.new(2000)
-		@movie_player = MoviePlayer.new
 		Settings.load!(settings_file)
+		@movie_player = MoviePlayer.new(Settings.player)
 		@mappings = Settings.mappings
 	end
 

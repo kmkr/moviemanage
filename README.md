@@ -1,6 +1,6 @@
 Lets you organize movies
 
-Example configuration:
+Example configuration (client):
 
     categories:
       - "[c]omedy"
@@ -33,3 +33,12 @@ Example configuration:
     processors:
       ffmpeg:
         path: ffmpeg
+
+Example configuration (server):
+
+    player: 'smplayer'
+    mappings:
+      - source: '.*something'
+        destination: '/home/foo/mnt'
+      - source: '/media/bar/unsorted'
+        destination: '/home/foo/mnt'
