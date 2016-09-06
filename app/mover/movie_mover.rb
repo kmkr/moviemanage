@@ -14,7 +14,7 @@ class MovieMover
 	def auto_move(destination_filter = "")
 		move_tease(destination_filter)
 		regular_files = @movie_file_finder.find(true).concat(@movie_file_finder.find(true, "scene/"))
-		move(files, destination_filter)
+		move(regular_files, destination_filter)
 	end
 
 	def move(files, destination_filter = "")
