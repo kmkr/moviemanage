@@ -1,5 +1,6 @@
 require_relative '../common/file_finder'
 require_relative '../common/file_writer'
+require_relative 'audio_file_finder'
 require_relative 'tease_file_finder'
 require 'fileutils'
 
@@ -8,10 +9,12 @@ class MovieMover
 	def initialize
 		@tease_file_finder = TeaseFileFinder.new
 		@movie_file_finder = FileFinder.new
+		@audio_file_finder = AudioFileFinder.new
 		@file_writer = FileWriter.new
 	end
 
 	def auto_move(destination_filter = "")
+		move_audio(destination_filter)
 		move_tease(destination_filter)
 		regular_files = @movie_file_finder.find(true).concat(@movie_file_finder.find(true, "scene/"))
 		move(regular_files, destination_filter)
@@ -22,6 +25,30 @@ class MovieMover
 	end
 
 	private
+	def move_audio(destination_filter)
+		audio_file = @audio_file_finder.find
+		unless audio_file.any?
+			puts "No audio files found"
+			return
+		end
+
+        audio_loc = Settings.mover["audio_location"]
+        if !audio_loc
+                p "Missing audio location in settings file"
+                return
+        end
+		destination = "#{audio_loc}/"
+
+		p "Audio: will move to static location #{destination} "
+		audio_file.each_with_index do |audio_file, index|
+			puts "#{index + 1}) #{audio_file}"
+		end
+		
+		audio_file.each do |file|
+			@file_writer.move(file, "#{destination}/#{File.basename(file)}")
+		end
+	end
+
 	def move_tease(destination_filter)
 		tease_files = @tease_file_finder.find
 		unless tease_files.any?

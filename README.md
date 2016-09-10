@@ -16,6 +16,7 @@ Example configuration (client):
       destinations:
         - "/home/my_account/films"
         - "/media/sda/films"
+      audio_location: "/media/sde/audio"
       tease_location: "/media/sde/trailers"
 
     scanner:

@@ -17,7 +17,7 @@ class AudioExtractor
 			puts "From where/to do you want to extract #{current}?"
 
 			# Supports only one time_at
-			times_a = @time_at_getter.get_time("Audio")[0]
+			time_at = @time_at_getter.get_time("Audio")[0]
 
 			if !time_at
 				done_with_file = true
