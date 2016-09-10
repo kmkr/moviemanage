@@ -32,7 +32,7 @@ class FfmpegProcessor
 
 	def audio_extract (file, start_at, length_in, audio_name)
 		Dir.mkdir("audio") unless File.directory?("audio")
-		command = "#{@ffmpeg} -ss #{@seconds_to_time_parser.parse(start_at)} -t #{@seconds_to_time_parser.parse(length_in)} -i \"#{file}\" -acodec libmp3lame -ab 128k \"audio/#{audio_name}\" -loglevel warning"
+		command = "#{@ffmpeg} -ss #{@seconds_to_time_parser.parse(start_at)} -t #{@seconds_to_time_parser.parse(length_in)} -i \"#{file}\" -acodec libmp3lame -ab 196k \"audio/#{audio_name}\" -loglevel warning"
 		Console.banner command
 		system(command)
 	end
