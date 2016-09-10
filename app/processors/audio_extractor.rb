@@ -17,9 +17,9 @@ class AudioExtractor
 			puts "From where/to do you want to extract #{current}?"
 
 			# Supports only one time_at
-			time_at = @time_at_getter.get_time("Audio")[0]
+			times_at = @time_at_getter.get_time("Audio")
 
-			if !time_at
+			if !times_at
 				done_with_file = true
 				puts "Do you want to keep #{current}? [y]/n"
 				inp = Stdin.gets
@@ -30,6 +30,7 @@ class AudioExtractor
 				next
 			end
 
+            time_at = times_at[0]
 			start_at = time_at[:start_at]
 			end_at = time_at[:end_at]
 			length_in = end_at - start_at
