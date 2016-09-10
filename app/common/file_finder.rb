@@ -8,7 +8,6 @@ class FileFinder
 
 	def initialize(type = :movie)
 		@extensions = @@types[type]
-        p @extensions
 	end
 
 	def find(keep_processed = false, relative_root = ".")
